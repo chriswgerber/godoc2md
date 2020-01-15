@@ -37,9 +37,11 @@ var (
 
 	// layout control
 	tabWidth       = flag.Int("tabwidth", 4, "tab width")
-	showTimestamps = flag.Bool("timestamps", false, "show timestamps with directory listings")
+	showTimestamps = flag.Bool("timestamps", true, "show timestamps with directory listings")
+	basePrefix     = flag.String("basePrefix", "gitlab.com/welllabs/devops", "path prefix of go files")
+	urlPrefix      = flag.String("urlPrefix", "gitlab.com", "path prefix of go files")
 	altPkgTemplate = flag.String("template", "", "path to an alternate template file")
-	showPlayground = flag.Bool("play", false, "enable playground in web interface")
+	showPlayground = flag.Bool("play", true, "enable playground in web interface")
 	showExamples   = flag.Bool("ex", false, "show examples in command line mode")
 	declLinks      = flag.Bool("links", true, "link identifiers to their declarations")
 
@@ -47,8 +49,7 @@ var (
 	// use the same format. For example Bitbucket Enterprise uses `#%d`. This option provides the
 	// user the option to switch the format as needed and still remain backwards compatible.
 	srcLinkHashFormat = flag.String("hashformat", "#L%d", "source link URL hash format")
-
-	srcLinkFormat = flag.String("srclink", "", "if set, format for entire source link")
+	srcLinkFormat     = flag.String("srclink", "", "if set, format for filename of source link")
 )
 
 func usage() {
@@ -61,61 +62,22 @@ func usage() {
 var (
 	pres *godoc.Presentation
 	fs   = vfs.NameSpace{}
-
-	funcs = map[string]interface{}{
-		"comment_md":  commentMdFunc,
-		"base":        path.Base,
-		"md":          mdFunc,
-		"pre":         preFunc,
-		"kebab":       kebabFunc,
-		"bitscape":    bitscapeFunc, //Escape [] for bitbucket confusion
-		"trim_prefix": strings.TrimPrefix,
-	}
 )
-
-func commentMdFunc(comment string) string {
-	var buf bytes.Buffer
-	ToMD(&buf, comment)
-	return buf.String()
-}
-
-func mdFunc(text string) string {
-	text = strings.Replace(text, "*", "\\*", -1)
-	text = strings.Replace(text, "_", "\\_", -1)
-	return text
-}
-
-func preFunc(text string) string {
-	return "``` go\n" + text + "\n```"
-}
 
 // Original Source https://github.com/golang/tools/blob/master/godoc/godoc.go#L562
 func srcLinkFunc(s string) string {
-	s = path.Clean("/" + s)
-	if !strings.HasPrefix(s, "/src/") {
-		s = "/src" + s
-	}
-	return s
+	return path.Clean("/" + strings.TrimPrefix(s, "/target"))
 }
 
 // Removed code line that always substracted 10 from the value of `line`.
 // Made format for the source link hash configurable to support source control platforms other than Github.
 // Original Source https://github.com/golang/tools/blob/master/godoc/godoc.go#L540
 func srcPosLinkFunc(s string, line, low, high int) string {
-	if *srcLinkFormat != "" {
-		return fmt.Sprintf(*srcLinkFormat, s, line, low, high)
-	}
-
 	s = srcLinkFunc(s)
+
 	var buf bytes.Buffer
 	template.HTMLEscape(&buf, []byte(s))
-	// selection ranges are of form "s=low:high"
-	if low < high {
-		fmt.Fprintf(&buf, "?s=%d:%d", low, high) // no need for URL escaping
-		if line < 1 {
-			line = 1
-		}
-	}
+
 	// line id's in html-printed source are of the
 	// form "L%d" (on Github) where %d stands for the line number
 	if line > 0 {
@@ -131,19 +93,6 @@ func readTemplate(name, data string) *template.Template {
 		log.Fatal("readTemplate: ", err)
 	}
 	return t
-}
-
-func kebabFunc(text string) string {
-	s := strings.Replace(strings.ToLower(text), " ", "-", -1)
-	s = strings.Replace(s, ".", "-", -1)
-	s = strings.Replace(s, "\\*", "42", -1)
-	return s
-}
-
-func bitscapeFunc(text string) string {
-	s := strings.Replace(text, "[", "\\[", -1)
-	s = strings.Replace(s, "]", "\\]", -1)
-	return s
 }
 
 func main() {
@@ -172,9 +121,10 @@ func main() {
 	pres.ShowPlayground = *showPlayground
 	pres.ShowExamples = *showExamples
 	pres.DeclLinks = *declLinks
+	pres.URLForSrc = srcLinkFunc
+	pres.URLForSrcPos = srcPosLinkFunc
 	pres.SrcMode = false
 	pres.HTMLMode = false
-	pres.URLForSrcPos = srcPosLinkFunc
 
 	if *altPkgTemplate != "" {
 		buf, err := ioutil.ReadFile(*altPkgTemplate)

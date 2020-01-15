@@ -1,7 +1,12 @@
 all: examples readme
 
-readme:
-	godoc2md github.com/davecheney/godoc2md > README.md
+build install:
+	go $@
+
+README.md:
+	godoc2md github.com/thatgerber/godoc2md > $@
+
+readme: README.md
 
 examples:
 	godoc2md github.com/kr/fs > examples/fs/README.md
