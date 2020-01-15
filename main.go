@@ -38,7 +38,7 @@ var (
 	// layout control
 	tabWidth       = flag.Int("tabwidth", 4, "tab width")
 	showTimestamps = flag.Bool("timestamps", true, "show timestamps with directory listings")
-	basePrefix     = flag.String("basePrefix", "gitlab.com/welllabs/devops", "path prefix of go files")
+	basePrefix     = flag.String("basePrefix", "gitlab.com/welllabs/devops/", "path prefix of go files")
 	urlPrefix      = flag.String("urlPrefix", "gitlab.com", "path prefix of go files")
 	altPkgTemplate = flag.String("template", "", "path to an alternate template file")
 	showPlayground = flag.Bool("play", true, "enable playground in web interface")
