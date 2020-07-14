@@ -40,6 +40,7 @@ func NewTemplateUtils(cfg *Cli) TemplateUtils {
 func (t TemplateUtils) Methods() map[string]interface{} {
 	return map[string]interface{}{
 		"comment_md":   t.commentMdFunc,
+		"srcfile_url":  t.getSourceFileURL,
 		"base":         t.baseFunc,
 		"md":           t.mdFunc,
 		"pre":          t.preFunc,
@@ -129,6 +130,24 @@ func (t TemplateUtils) getFullURL(pkg *godoc.PageInfo, decl ast.Decl) string {
 	sourceURL.Fragment = raw.Fragment
 	sourceURL.RawQuery = raw.RawQuery
 	sourceURL.Path = path.Join(sourceURL.Path, repoPath, fileBranchPath, raw.Path, filename[len(filename)-1])
+
+	return sourceURL.String()
+}
+
+func (t TemplateUtils) getSourceFileURL(s string) string {
+	sourceURL, err := url.Parse(t.urlPrefix)
+	if err != nil {
+		return fmt.Sprintf("%v", err)
+	}
+	if sourceURL.Host == "" {
+		sourceURL, err = url.Parse(s)
+		if err != nil {
+			return fmt.Sprintf("%v", err)
+		}
+	}
+	repoPath := t.baseFunc(sourceURL.Path)
+	sourceURL.Scheme = defaultScheme
+	sourceURL.Path = path.Join(t.basePrefix, fileBranchPath, repoPath)
 
 	return sourceURL.String()
 }

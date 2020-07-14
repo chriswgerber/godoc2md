@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	templateName = "package.txt"
+	templateName = "template.go"
 )
 
 type sourceLinker struct {
@@ -58,20 +58,20 @@ func NewPresentation(corpus *godoc.Corpus, config *Cli) *godoc.Presentation {
 	pres.URLForSrc = sl.source
 	pres.URLForSrcPos = sl.sourcePosition
 
-	docTemplate := template.New(templateName)
-	docTemplate.Funcs(pres.FuncMap())
-
-	utilFuncs := NewTemplateUtils(config)
-	docTemplate.Funcs(utilFuncs.Methods())
-
 	templateText := pkgTemplate
 	if *config.AltPkgTemplate != "" {
-		buf, err := ioutil.ReadFile(*config.AltPkgTemplate)
+		templateName = *config.AltPkgTemplate
+		buf, err := ioutil.ReadFile(templateName)
 		if err != nil {
 			log.Fatal(err)
 		}
 		templateText = string(buf)
 	}
+	docTemplate := template.New(templateName)
+	docTemplate.Funcs(pres.FuncMap())
+
+	utilFuncs := NewTemplateUtils(config)
+	docTemplate.Funcs(utilFuncs.Methods())
 
 	var err error
 	pres.PackageText, err = docTemplate.Parse(templateText)

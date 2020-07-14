@@ -63,7 +63,7 @@ $ godoc2md
 
 #### <a name="pkg-files">Package files</a>
 
-[comment.go](/github.com/thatgerber/godoc2md/comment.go) [config.go](/github.com/thatgerber/godoc2md/config.go) [doc.go](/github.com/thatgerber/godoc2md/doc.go) [funcs.go](/github.com/thatgerber/godoc2md/funcs.go) [presentation.go](/github.com/thatgerber/godoc2md/presentation.go) [template.go](/github.com/thatgerber/godoc2md/template.go) 
+[comment.go](https://github.com/thatgerber/godoc2md/blob/master/comment.go) [config.go](https://github.com/thatgerber/godoc2md/blob/master/config.go) [doc.go](https://github.com/thatgerber/godoc2md/blob/master/doc.go) [funcs.go](https://github.com/thatgerber/godoc2md/blob/master/funcs.go) [presentation.go](https://github.com/thatgerber/godoc2md/blob/master/presentation.go) [template.go](https://github.com/thatgerber/godoc2md/blob/master/template.go) 
 
 ## <a name="pkg-variables">Variables</a>
 

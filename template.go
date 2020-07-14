@@ -41,7 +41,7 @@ var pkgTemplate = `{{with .PDoc -}}
 {{- /* Package Files */ -}}
 {{with .Filenames}}#### <a name="pkg-files">Package files</a>
 
-{{range .}}[{{.|filename|html}}]({{.|srcLink|html}}) {{end}}
+{{range .}}[{{.|filename|html}}]({{.|srcfile_url|html}}) {{end}}
 
 {{end}}
 
