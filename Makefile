@@ -1,17 +1,27 @@
-all: examples readme
+PKG_NAME:=godoc2md
 
-build install:
-	go $@
+EXE=./$(PKG_NAME)
 
-README.md:
-	godoc2md github.com/thatgerber/godoc2md > $@
+TARGETS=$(PKG_NAME)
+
+$(PKG_NAME): $(wildcard *.go)
+	go build -o $@ ./cmd/$@
+
+build: $(PKG_NAME)
+
+all: readme examples doc
 
 readme: README.md
 
+doc: README.md
+
 examples:
-	godoc2md github.com/kr/fs > examples/fs/README.md
-	godoc2md github.com/codegangsta/martini > examples/martini/README.md
-	godoc2md github.com/gorilla/sessions > examples/sessions/README.md
-	godoc2md go/build > examples/build/README.md
+	$(EXE) github.com/kr/fs > examples/fs/README.md
+	$(EXE) github.com/codegangsta/martini > examples/martini/README.md
+	$(EXE) github.com/gorilla/sessions > examples/sessions/README.md
+	$(EXE) go/build > examples/build/README.md
 
 .PHONY: examples readme all
+
+README.md: $(PKG_NAME)
+	$(EXE) github.com/thatgerber/godoc2md > $@

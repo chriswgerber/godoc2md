@@ -1,1 +1,180 @@
-# I'm sorry I cannot offer support for this package any more. Feel free to fork it, you have the source, Luke.
+# godoc2md
+
+`import "github.com/thatgerber/godoc2md"`
+
+* [Overview](#pkg-overview)
+* [Index](#pkg-index)
+* [Subdirectories](#pkg-subdirectories)
+
+## <a name="pkg-overview">Overview</a>
+
+Package godoc2md contains the code used to perform the CLI command
+`godoc2md`.
+
+This package is forked from <a href="https://github.com/davecheney/godoc2md">https://github.com/davecheney/godoc2md</a>
+which is no longer updated.
+
+godoc2md converts godoc formatted package documentation into Markdown format.
+
+### Usage
+
+```
+# Generate Package Readme
+$ godoc2md $PACKAGE > $GOPATH/src/$PACKAGE/README.md
+
+# See all Options
+$ godoc2md
+usage: godoc2md package [name ...]
+   -basePrefix string
+       path prefix of go files.
+   -ex
+       show examples in command line mode
+   -goroot string
+       Go root directory (default $GOROOT)
+   -hashformat string
+       source link URL hash format (default "#L%d")
+   -links
+       link identifiers to their declarations (default true)
+   -play
+       enable playground in web interface (default true)
+   -srclink string
+       if set, format for filename of source link
+   -tabwidth int
+       tab width (default 4)
+   -template string
+       path to an alternate template file
+   -timestamps
+       show timestamps with directory listings (default true)
+   -urlPrefix string
+       path prefix of go files (default "github.com")
+   -v	verbose mode
+```
+
+## <a name="pkg-index">Index</a>
+
+* [Variables](#pkg-variables)
+* [func NewPresentation(corpus *godoc.Corpus, config *Cli) *godoc.Presentation](#NewPresentation)
+* [func ToMD(w io.Writer, text string)](#ToMD)
+* [type Cli](#Cli)
+  * [func Parse() ([]string, *Cli)](#Parse)
+* [type TemplateUtils](#TemplateUtils)
+  * [func NewTemplateUtils(cfg *Cli) TemplateUtils](#NewTemplateUtils)
+  * [func (t TemplateUtils) Methods() map[string]interface{}](#TemplateUtils.Methods)
+
+#### <a name="pkg-files">Package files</a>
+
+[comment.go](/github.com/thatgerber/godoc2md/comment.go) [config.go](/github.com/thatgerber/godoc2md/config.go) [doc.go](/github.com/thatgerber/godoc2md/doc.go) [funcs.go](/github.com/thatgerber/godoc2md/funcs.go) [presentation.go](/github.com/thatgerber/godoc2md/presentation.go) [template.go](/github.com/thatgerber/godoc2md/template.go) 
+
+## <a name="pkg-variables">Variables</a>
+
+```go
+var (
+
+    // Config contains the configuration for the CLI. To populate config, call
+    // `Parse()`.
+    Config = &Cli{
+        Verbose:           flag.Bool("v", false, "verbose mode"),
+        Goroot:            flag.String("goroot", "", "directory of GOROOT. Will attempt to lookup from env"),
+        TabWidth:          flag.Int("tabwidth", 4, "tab width"),
+        ShowTimestamps:    flag.Bool("timestamps", true, "show timestamps with directory listings"),
+        BasePrefix:        flag.String("basePrefix", "", "path prefix of go files"),
+        UrlPrefix:         flag.String("urlPrefix", defaultUrlPrefix, "path prefix of go files"),
+        AltPkgTemplate:    flag.String("template", "", "path to an alternate template file"),
+        ShowPlayground:    flag.Bool("play", true, "enable playground in web interface"),
+        ShowExamples:      flag.Bool("ex", false, "show examples in command line mode"),
+        DeclLinks:         flag.Bool("links", true, "link identifiers to their declarations"),
+        SrcLinkHashFormat: flag.String("hashformat", "#L%d", "source link URL hash format"),
+        SrcLinkFormat:     flag.String("srclink", "", "if set, format for filename of source link"),
+    }
+)
+```
+
+```go
+var (
+    TimeFormat = "2-Jan-2006 15:04:05 -0700"
+)
+```
+
+## <a name="NewPresentation">func</a> [NewPresentation](/presentation.go#L46)
+
+```go
+func NewPresentation(corpus *godoc.Corpus, config *Cli) *godoc.Presentation
+```
+
+## <a name="ToMD">func</a> [ToMD](/comment.go#L197)
+
+```go
+func ToMD(w io.Writer, text string)
+```
+
+ToMD converts comment text to formatted Markdown.
+The comment was prepared by DocReader,
+so it is known not to have leading, trailing blank lines
+nor to have trailing spaces at the end of lines.
+The comment markers have already been removed.
+
+Each span of unindented non-blank lines is converted into
+a single paragraph. There is one exception to the rule: a span that
+consists of a single line, is followed by another paragraph span,
+begins with a capital letter, and contains no punctuation
+is formatted as a heading.
+
+A span of indented lines is converted into a `<pre>` block,
+with the common indent prefix removed.
+
+URLs in the comment text are converted into links.
+
+## <a name="Cli">type</a> [Cli](/config.go#L74)
+
+```go
+type Cli struct {
+    Verbose *bool
+    // Goroot
+    Goroot *string
+
+    // layout control
+    TabWidth       *int
+    ShowTimestamps *bool
+    BasePrefix     *string
+    UrlPrefix      *string
+    AltPkgTemplate *string
+    ShowPlayground *bool
+    ShowExamples   *bool
+    DeclLinks      *bool
+
+    // The hash format for Github is the default `#L%d`; but other source control platforms do not
+    // use the same format. For example Bitbucket Enterprise uses `#%d`. This option provides the
+    // user the option to switch the format as needed and still remain backwards compatible.
+    SrcLinkHashFormat *string
+    SrcLinkFormat     *string
+}
+```
+
+### <a name="Parse">func</a> [Parse](/config.go#L96)
+
+```go
+func Parse() ([]string, *Cli)
+```
+
+## <a name="TemplateUtils">type</a> [TemplateUtils](/funcs.go#L22)
+
+```go
+type TemplateUtils struct {
+    // contains filtered or unexported fields
+}
+```
+
+### <a name="NewTemplateUtils">func</a> [NewTemplateUtils](/funcs.go#L28)
+
+```go
+func NewTemplateUtils(cfg *Cli) TemplateUtils
+```
+
+### <a name="TemplateUtils.Methods">func</a> (TemplateUtils) [Methods](/funcs.go#L36)
+
+```go
+func (t TemplateUtils) Methods() map[string]interface{}
+```
+
+- - -
+Generated by [godoc2md](http://github.com/thatgerber/godoc2md)

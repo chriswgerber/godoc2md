@@ -4,7 +4,7 @@
 
 // Godoc comment extraction and comment -> Markdown formatting.
 
-package main
+package godoc2md
 
 import (
 	"io"
@@ -35,7 +35,8 @@ var (
 	htmlAq   = []byte(`">`)
 	htmlEnda = []byte("</a>")
 
-	mdPre     = []byte("\t")
+	mdPre     = []byte("")
+	mdPreline = []byte("```\n")
 	mdNewline = []byte("\n")
 	mdH3      = []byte("### ")
 )
@@ -189,7 +190,7 @@ func anchorID(line string) string {
 // begins with a capital letter, and contains no punctuation
 // is formatted as a heading.
 //
-// A span of indented lines is converted into a <pre> block,
+// A span of indented lines is converted into a `<pre>` block,
 // with the common indent prefix removed.
 //
 // URLs in the comment text are converted into links.
@@ -212,11 +213,12 @@ func ToMD(w io.Writer, text string) {
 			}
 			_, _ = w.Write(mdNewline)
 		case opPre:
-			_, _ = w.Write(mdNewline)
+			_, _ = w.Write(mdPreline)
 			for _, line := range b.lines {
-				_, _ = w.Write(mdPre)
+				// _, _ = w.Write(mdPre)
 				emphasize(w, line)
 			}
+			_, _ = w.Write(mdPreline)
 			_, _ = w.Write(mdNewline)
 		}
 	}
