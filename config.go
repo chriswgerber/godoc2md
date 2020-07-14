@@ -18,7 +18,7 @@ var (
 	defaultSourceID  = "master"
 
 	// Config contains the configuration for the CLI. To populate config, call
-	// `Parse()`.
+	// `Parse()` and use the provided response.
 	Config = &Cli{
 		Verbose:           flag.Bool("v", false, "verbose mode"),
 		Goroot:            flag.String("goroot", "", "directory of Go Root. Will attempt to lookup from `GOROOT`"),
