@@ -15,8 +15,7 @@ import (
 )
 
 const (
-	defaultScheme  = "https"
-	fileBranchPath = "blob/master"
+	URLScheme = "https"
 )
 
 var (
@@ -24,6 +23,7 @@ var (
 )
 
 type TemplateUtils struct {
+	sourceID   string
 	basePrefix string
 	urlPrefix  string
 	timeFormat string
@@ -31,6 +31,7 @@ type TemplateUtils struct {
 
 func NewTemplateUtils(cfg *Cli) TemplateUtils {
 	return TemplateUtils{
+		sourceID:   *cfg.SourceID,
 		basePrefix: *cfg.BasePrefix,
 		urlPrefix:  *cfg.UrlPrefix,
 		timeFormat: TimeFormat,
@@ -115,7 +116,7 @@ func (t TemplateUtils) getFullURL(pkg *godoc.PageInfo, decl ast.Decl) string {
 	if err != nil {
 		return fmt.Sprintf("%v", err)
 	}
-	sourceURL.Scheme = defaultScheme
+	sourceURL.Scheme = URLScheme
 
 	repoPath := t.baseFunc(pkg.PDoc.ImportPath)
 
@@ -129,7 +130,8 @@ func (t TemplateUtils) getFullURL(pkg *godoc.PageInfo, decl ast.Decl) string {
 
 	sourceURL.Fragment = raw.Fragment
 	sourceURL.RawQuery = raw.RawQuery
-	sourceURL.Path = path.Join(t.basePrefix, fileBranchPath, repoPath, raw.Path, filename[len(filename)-1])
+	branchPath := fmt.Sprintf("blob/%s", t.sourceID)
+	sourceURL.Path = path.Join(t.basePrefix, branchPath, repoPath, raw.Path, filename[len(filename)-1])
 
 	return sourceURL.String()
 }
@@ -146,8 +148,9 @@ func (t TemplateUtils) getSourceFileURL(s string) string {
 		}
 	}
 	repoPath := t.baseFunc(sourceURL.Path)
-	sourceURL.Scheme = defaultScheme
-	sourceURL.Path = path.Join(t.basePrefix, fileBranchPath, repoPath)
+	sourceURL.Scheme = URLScheme
+	branchPath := fmt.Sprintf("blob/%s", t.sourceID)
+	sourceURL.Path = path.Join(t.basePrefix, branchPath, repoPath)
 
 	return sourceURL.String()
 }

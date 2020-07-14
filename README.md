@@ -52,7 +52,7 @@ $ godoc2md
 
 ## <a name="pkg-index">Index</a>
 
-* [Variables](#pkg-variables)
+* [Constants](#pkg-constants)* [Variables](#pkg-variables)
 * [func NewPresentation(corpus *godoc.Corpus, config *Cli) *godoc.Presentation](#NewPresentation)
 * [func ToMD(w io.Writer, text string)](#ToMD)
 * [type Cli](#Cli)
@@ -64,6 +64,14 @@ $ godoc2md
 #### <a name="pkg-files">Package files</a>
 
 [comment.go](https://github.com/thatgerber/godoc2md/blob/master/comment.go) [config.go](https://github.com/thatgerber/godoc2md/blob/master/config.go) [doc.go](https://github.com/thatgerber/godoc2md/blob/master/doc.go) [funcs.go](https://github.com/thatgerber/godoc2md/blob/master/funcs.go) [presentation.go](https://github.com/thatgerber/godoc2md/blob/master/presentation.go) [template.go](https://github.com/thatgerber/godoc2md/blob/master/template.go) 
+
+## <a name="pkg-constants">Constants</a>
+
+```go
+const (
+    URLScheme = "https"
+)
+```
 
 ## <a name="pkg-variables">Variables</a>
 
@@ -79,6 +87,7 @@ var (
         ShowTimestamps:    flag.Bool("timestamps", true, "show timestamps with directory listings"),
         BasePrefix:        flag.String("basePrefix", "", "path prefix of go files. If not set, cli will attempt to set it by checking `go.mod`, current directory, and the 1st position argument"),
         UrlPrefix:         flag.String("urlPrefix", defaultURLPrefix, "URL for generated URLs."),
+        SourceID:          flag.String("sourceID", defaultSourceID, "URL for generated URLs."),
         AltPkgTemplate:    flag.String("template", "", "path to an alternate template file"),
         ShowPlayground:    flag.Bool("play", true, "enable playground in web interface"),
         ShowExamples:      flag.Bool("ex", false, "show examples in command line mode"),
@@ -122,7 +131,7 @@ indent prefix removed.
 
 URLs in the comment text are converted into links.
 
-## <a name="Cli">type</a> [Cli](https://github.com/thatgerber/godoc2md/blob/master/config.go#L74)
+## <a name="Cli">type</a> [Cli](https://github.com/thatgerber/godoc2md/blob/master/config.go#L76)
 
 ```go
 type Cli struct {
@@ -135,6 +144,7 @@ type Cli struct {
     ShowTimestamps *bool
     BasePrefix     *string
     UrlPrefix      *string
+    SourceID       *string
     AltPkgTemplate *string
     ShowPlayground *bool
     ShowExamples   *bool
@@ -148,13 +158,13 @@ type Cli struct {
 }
 ```
 
-### <a name="Parse">func</a> [Parse](https://github.com/thatgerber/godoc2md/blob/master/config.go#L96)
+### <a name="Parse">func</a> [Parse](https://github.com/thatgerber/godoc2md/blob/master/config.go#L99)
 
 ```go
 func Parse() ([]string, *Cli)
 ```
 
-## <a name="TemplateUtils">type</a> [TemplateUtils](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L26)
+## <a name="TemplateUtils">type</a> [TemplateUtils](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L25)
 
 ```go
 type TemplateUtils struct {
@@ -168,7 +178,7 @@ type TemplateUtils struct {
 func NewTemplateUtils(cfg *Cli) TemplateUtils
 ```
 
-### <a name="TemplateUtils.Methods">func</a> (TemplateUtils) [Methods](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L40)
+### <a name="TemplateUtils.Methods">func</a> (TemplateUtils) [Methods](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L41)
 
 ```go
 func (t TemplateUtils) Methods() map[string]interface{}

@@ -15,6 +15,7 @@ var (
 	cmdName = "godoc2md"
 
 	defaultURLPrefix = ""
+	defaultSourceID  = "master"
 
 	// Config contains the configuration for the CLI. To populate config, call
 	// `Parse()`.
@@ -25,6 +26,7 @@ var (
 		ShowTimestamps:    flag.Bool("timestamps", true, "show timestamps with directory listings"),
 		BasePrefix:        flag.String("basePrefix", "", "path prefix of go files. If not set, cli will attempt to set it by checking `go.mod`, current directory, and the 1st position argument"),
 		UrlPrefix:         flag.String("urlPrefix", defaultURLPrefix, "URL for generated URLs."),
+		SourceID:          flag.String("sourceID", defaultSourceID, "URL for generated URLs."),
 		AltPkgTemplate:    flag.String("template", "", "path to an alternate template file"),
 		ShowPlayground:    flag.Bool("play", true, "enable playground in web interface"),
 		ShowExamples:      flag.Bool("ex", false, "show examples in command line mode"),
@@ -81,6 +83,7 @@ type Cli struct {
 	ShowTimestamps *bool
 	BasePrefix     *string
 	UrlPrefix      *string
+	SourceID       *string
 	AltPkgTemplate *string
 	ShowPlayground *bool
 	ShowExamples   *bool
