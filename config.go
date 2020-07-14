@@ -14,17 +14,17 @@ import (
 var (
 	cmdName = "godoc2md"
 
-	defaultUrlPrefix = "github.com"
+	defaultURLPrefix = "github.com"
 
 	// Config contains the configuration for the CLI. To populate config, call
 	// `Parse()`.
 	Config = &Cli{
 		Verbose:           flag.Bool("v", false, "verbose mode"),
-		Goroot:            flag.String("goroot", "", "directory of GOROOT. Will attempt to lookup from env"),
+		Goroot:            flag.String("goroot", "", "directory of Go Root. Will attempt to lookup from `GOROOT`"),
 		TabWidth:          flag.Int("tabwidth", 4, "tab width"),
 		ShowTimestamps:    flag.Bool("timestamps", true, "show timestamps with directory listings"),
-		BasePrefix:        flag.String("basePrefix", "", "path prefix of go files"),
-		UrlPrefix:         flag.String("urlPrefix", defaultUrlPrefix, "path prefix of go files"),
+		BasePrefix:        flag.String("basePrefix", "", "path prefix of go files. If not set, cli will attempt to set it by checking `go.mod`, current directory, and the 1st position argument"),
+		UrlPrefix:         flag.String("urlPrefix", defaultURLPrefix, "URL for generated URLs."),
 		AltPkgTemplate:    flag.String("template", "", "path to an alternate template file"),
 		ShowPlayground:    flag.Bool("play", true, "enable playground in web interface"),
 		ShowExamples:      flag.Bool("ex", false, "show examples in command line mode"),
@@ -42,7 +42,7 @@ func usage() {
 
 func getBasePkgPrefix(potench string) *string {
 	cwd, _ := os.Getwd()
-	modfilePath := path.Join(cwd, "go.md")
+	modfilePath := path.Join(cwd, "go.mod")
 
 	// Check if we have a go.mod
 	if _, err := os.Stat(modfilePath); err == nil || !os.IsNotExist(err) {

@@ -4,6 +4,7 @@
 
 * [Overview](#pkg-overview)
 * [Index](#pkg-index)
+* [Examples](#pkg-examples)
 * [Subdirectories](#pkg-subdirectories)
 
 ## <a name="pkg-overview">Overview</a>
@@ -11,12 +12,12 @@
 Package godoc2md contains the code used to perform the CLI command
 `godoc2md`.
 
+[![GoDoc](<a href="https://godoc.org/github.com/ThatGerber/godoc2md?status.svg">https://godoc.org/github.com/ThatGerber/godoc2md?status.svg</a>)](<a href="https://godoc.org/github.com/ThatGerber/godoc2md">https://godoc.org/github.com/ThatGerber/godoc2md</a>)
+
 This package is forked from <a href="https://github.com/davecheney/godoc2md">https://github.com/davecheney/godoc2md</a>
 which is no longer updated.
 
 godoc2md converts godoc formatted package documentation into Markdown format.
-
-### Usage
 
 ```
 # Generate Package Readme
@@ -24,30 +25,30 @@ $ godoc2md $PACKAGE > $GOPATH/src/$PACKAGE/README.md
 
 # See all Options
 $ godoc2md
-usage: godoc2md package [name ...]
-   -basePrefix string
-       path prefix of go files.
-   -ex
-       show examples in command line mode
-   -goroot string
-       Go root directory (default $GOROOT)
-   -hashformat string
-       source link URL hash format (default "#L%d")
-   -links
-       link identifiers to their declarations (default true)
-   -play
-       enable playground in web interface (default true)
-   -srclink string
-       if set, format for filename of source link
-   -tabwidth int
-       tab width (default 4)
-   -template string
-       path to an alternate template file
-   -timestamps
-       show timestamps with directory listings (default true)
-   -urlPrefix string
-       path prefix of go files (default "github.com")
-   -v	verbose mode
+  usage: godoc2md package [more-packages ...]
+  -basePrefix go.mod
+	  	path prefix of go files. If not set, cli will attempt to set it by checking go.mod, current directory, and the 1st position argument
+  -ex
+	  	show examples in command line mode
+  -goroot GOROOT
+	  	directory of Go Root. Will attempt to lookup from GOROOT
+  -hashformat string
+	  	source link URL hash format (default "#L%d")
+  -links
+	  	link identifiers to their declarations (default true)
+  -play
+	  	enable playground in web interface (default true)
+  -srclink string
+	  	if set, format for filename of source link
+  -tabwidth int
+	  	tab width (default 4)
+  -template string
+	  	path to an alternate template file
+  -timestamps
+	  	show timestamps with directory listings (default true)
+  -urlPrefix string
+	  	URL for generated URLs. (default "github.com")
+  -v	verbose mode
 ```
 
 ## <a name="pkg-index">Index</a>
@@ -60,6 +61,10 @@ usage: godoc2md package [name ...]
 * [type TemplateUtils](#TemplateUtils)
   * [func NewTemplateUtils(cfg *Cli) TemplateUtils](#NewTemplateUtils)
   * [func (t TemplateUtils) Methods() map[string]interface{}](#TemplateUtils.Methods)
+
+#### <a name="pkg-examples">Examples</a>
+
+* [Parse](#example_Parse)
 
 #### <a name="pkg-files">Package files</a>
 
@@ -74,11 +79,11 @@ var (
     // `Parse()`.
     Config = &Cli{
         Verbose:           flag.Bool("v", false, "verbose mode"),
-        Goroot:            flag.String("goroot", "", "directory of GOROOT. Will attempt to lookup from env"),
+        Goroot:            flag.String("goroot", "", "directory of Go Root. Will attempt to lookup from `GOROOT`"),
         TabWidth:          flag.Int("tabwidth", 4, "tab width"),
         ShowTimestamps:    flag.Bool("timestamps", true, "show timestamps with directory listings"),
-        BasePrefix:        flag.String("basePrefix", "", "path prefix of go files"),
-        UrlPrefix:         flag.String("urlPrefix", defaultUrlPrefix, "path prefix of go files"),
+        BasePrefix:        flag.String("basePrefix", "", "path prefix of go files. If not set, cli will attempt to set it by checking `go.mod`, current directory, and the 1st position argument"),
+        UrlPrefix:         flag.String("urlPrefix", defaultURLPrefix, "URL for generated URLs."),
         AltPkgTemplate:    flag.String("template", "", "path to an alternate template file"),
         ShowPlayground:    flag.Bool("play", true, "enable playground in web interface"),
         ShowExamples:      flag.Bool("ex", false, "show examples in command line mode"),
@@ -156,7 +161,7 @@ type Cli struct {
 func Parse() ([]string, *Cli)
 ```
 
-## <a name="TemplateUtils">type</a> [TemplateUtils](/funcs.go#L22)
+## <a name="TemplateUtils">type</a> [TemplateUtils](/funcs.go#L24)
 
 ```go
 type TemplateUtils struct {
@@ -164,13 +169,13 @@ type TemplateUtils struct {
 }
 ```
 
-### <a name="NewTemplateUtils">func</a> [NewTemplateUtils](/funcs.go#L28)
+### <a name="NewTemplateUtils">func</a> [NewTemplateUtils](/funcs.go#L30)
 
 ```go
 func NewTemplateUtils(cfg *Cli) TemplateUtils
 ```
 
-### <a name="TemplateUtils.Methods">func</a> (TemplateUtils) [Methods](/funcs.go#L36)
+### <a name="TemplateUtils.Methods">func</a> (TemplateUtils) [Methods](/funcs.go#L38)
 
 ```go
 func (t TemplateUtils) Methods() map[string]interface{}

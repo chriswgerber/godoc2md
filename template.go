@@ -32,13 +32,14 @@ var pkgTemplate = `{{with .PDoc -}}
 * [{{noteTitle $marker | html}}s](#pkg-note-{{$marker}}){{end}}{{end}}
 
 {{/* Examples */ -}}
-{{if $.Examples}}#### <a name="pkg-examples">Examples</a>
+{{with $.Examples}}#### <a name="pkg-examples">Examples</a>
 
-{{- range $.Examples}}
-* [{{example_name .Name}}](#example_{{.Name}}){{- end}}{{end}}
+{{range .}}* [{{example_name .Name}}](#example_{{.Name}})
+{{end}}
+{{end}}
 
-{{- /* Package Files */}}
-{{- with .Filenames}}#### <a name="pkg-files">Package files</a>
+{{- /* Package Files */ -}}
+{{with .Filenames}}#### <a name="pkg-files">Package files</a>
 
 {{range .}}[{{.|filename|html}}]({{.|srcLink|html}}) {{end}}
 
