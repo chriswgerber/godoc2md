@@ -117,8 +117,7 @@ func (t TemplateUtils) getFullURL(pkg *godoc.PageInfo, decl ast.Decl) string {
 	}
 	sourceURL.Scheme = defaultScheme
 
-	// repoPath := strings.TrimPrefix(pkg.PDoc.ImportPath, sourceURL.Host)
-	repoPath := t.baseFunc(sourceURL.Path)
+	repoPath := t.baseFunc(pkg.PDoc.ImportPath)
 
 	sourceLoc := pkg.FSet.Position(decl.Pos())
 	raw, err := url.Parse(fmt.Sprintf(*Config.SrcLinkHashFormat, sourceLoc.Line))
