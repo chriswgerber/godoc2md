@@ -3,11 +3,15 @@ package godoc2md
 import (
 	"bytes"
 	"fmt"
-	"go/doc"
+	"go/ast"
 	"net/url"
 	"path"
 	"strings"
 	"time"
+	"unicode"
+	"unicode/utf8"
+
+	"golang.org/x/tools/godoc"
 )
 
 const (
@@ -46,6 +50,22 @@ func (t TemplateUtils) Methods() map[string]interface{} {
 		"current_time": t.getCurrentTime,
 		"get_full_url": t.getFullURL,
 	}
+}
+
+func startsWithUppercase(s string) bool {
+	r, _ := utf8.DecodeRuneInString(s)
+	return unicode.IsUpper(r)
+}
+
+func splitExampleName(s string) (name, suffix string) {
+	i := strings.LastIndex(s, "_")
+	if 0 <= i && i < len(s)-1 && !startsWithUppercase(s[i+1:]) {
+		name = s[:i]
+		suffix = " (" + strings.Title(s[i+1:]) + ")"
+		return
+	}
+	name = s
+	return
 }
 
 func (t TemplateUtils) commentMdFunc(comment string) string {
@@ -89,22 +109,26 @@ func (t TemplateUtils) isLastItem(idx int, list []string) bool {
 	return idx+1 >= len(list)
 }
 
-func (t TemplateUtils) getFullURL(pkg *doc.Package, s string) string {
+func (t TemplateUtils) getFullURL(pkg *godoc.PageInfo, decl ast.Decl) string {
 	sourceURL, err := url.Parse(t.urlPrefix)
 	if err != nil {
 		return fmt.Sprintf("%v", err)
 	}
 	sourceURL.Scheme = defaultScheme
 
-	repoPath := strings.TrimPrefix(pkg.ImportPath, sourceURL.String())
-	raw, err := url.Parse(s)
+	repoPath := strings.TrimPrefix(pkg.PDoc.ImportPath, sourceURL.Host)
+
+	sourceLoc := pkg.FSet.Position(decl.Pos())
+	raw, err := url.Parse(fmt.Sprintf(*Config.SrcLinkHashFormat, sourceLoc.Line))
 	if err != nil {
 		return fmt.Sprintf("%v", err)
 	}
 
+	filename := strings.Split(sourceLoc.Filename, "/")
+
 	sourceURL.Fragment = raw.Fragment
 	sourceURL.RawQuery = raw.RawQuery
-	sourceURL.Path = path.Join(sourceURL.Path, fileBranchPath, repoPath, raw.Path)
+	sourceURL.Path = path.Join(sourceURL.Path, repoPath, fileBranchPath, raw.Path, filename[len(filename)-1])
 
 	return sourceURL.String()
 }

@@ -59,7 +59,7 @@ var pkgTemplate = `{{with .PDoc -}}
 {{- end -}}
 
 {{- /* Functions */ -}}
-{{- range .Funcs}}{{$name_html := html .Name}}## <a name="{{$name_html}}">func</a> [{{$name_html}}]({{posLink_url $ .Decl}})
+{{- range .Funcs}}{{$name_html := html .Name}}## <a name="{{$name_html}}">func</a> [{{$name_html}}]({{get_full_url $ .Decl}})
 
 {{node $ .Decl | pre}}
 {{comment_md .Doc -}}
@@ -68,7 +68,7 @@ var pkgTemplate = `{{with .PDoc -}}
 {{- end -}}
 
 {{/* Types */ -}}
-{{range .Types}}{{$tname := .Name}}{{$tname_html := html .Name}}## <a name="{{$tname_html}}">type</a> [{{$tname_html}}]({{posLink_url $ .Decl}})
+{{range .Types}}{{$tname := .Name}}{{$tname_html := html .Name}}## <a name="{{$tname_html}}">type</a> [{{$tname_html}}]({{get_full_url $ .Decl}})
 
 {{node $ .Decl | pre}}
 {{comment_md .Doc -}}
@@ -81,7 +81,7 @@ var pkgTemplate = `{{with .PDoc -}}
 {{methodset_html $ $tname -}}
 
 {{- /* Functions */ -}}
-{{range .Funcs}}{{$name_html := html .Name}}### <a name="{{$name_html}}">func</a> [{{$name_html}}]({{posLink_url $ .Decl}})
+{{range .Funcs}}{{$name_html := html .Name}}### <a name="{{$name_html}}">func</a> [{{$name_html}}]({{get_full_url $ .Decl}})
 
 {{node $ .Decl | pre}}
 {{comment_md .Doc -}}
@@ -90,7 +90,7 @@ var pkgTemplate = `{{with .PDoc -}}
 {{callgraph_html $ "" .Name}}
 
 {{- /* Methods */ -}}
-{{range .Methods}}{{$name_html := html .Name}}### <a name="{{$tname_html}}.{{$name_html}}">func</a> ({{md .Recv}}) [{{$name_html}}]({{posLink_url $ .Decl}})
+{{range .Methods}}{{$name_html := html .Name}}### <a name="{{$tname_html}}.{{$name_html}}">func</a> ({{md .Recv}}) [{{$name_html}}]({{get_full_url $ .Decl}})
 
 {{node $ .Decl | pre}}
 {{comment_md .Doc -}}
@@ -104,7 +104,7 @@ var pkgTemplate = `{{with .PDoc -}}
 {{with $.Notes}}{{range $marker, $content := .}}## <a name="pkg-note-{{$marker}}">{{noteTitle $marker | html}}s
 
 <ul style="list-style: none; padding: 0;">{{range .}}
-<li><a href="{{posLink_url $ .}}">&#x261e;</a> {{html .Body}}</li>
+<li><a href="{{get_full_url $ .}}">&#x261e;</a> {{html .Body}}</li>
 {{end}}</ul>
 {{- end}}{{end}}{{end -}}
 

@@ -41,6 +41,90 @@ var (
 	mdH3      = []byte("### ")
 )
 
+// ToMD converts comment text to formatted Markdown. The comment was prepared by
+// DocReader, so it is known not to have leading, trailing blank lines nor to
+// have trailing spaces at the end of lines. The comment markers have already
+// been removed.
+//
+// Each span of unindented non-blank lines is converted into a single paragraph.
+// There is one exception to the rule: a span that consists of a single line, is
+// followed by another paragraph span, begins with a capital letter, and
+// contains no punctuation is formatted as a heading.
+//
+// A span of indented lines is converted into a `<pre>` block, with the common
+// indent prefix removed.
+//
+// URLs in the comment text are converted into links.
+func ToMD(w io.Writer, text string) {
+	for _, b := range blocks(text) {
+		switch b.op {
+		case opPara:
+			for _, line := range b.lines {
+				emphasize(w, line)
+			}
+			_, _ = w.Write(mdNewline) // trailing newline to emulate </p>
+		case opHead:
+			_, _ = w.Write(mdH3)
+			id := ""
+			for _, line := range b.lines {
+				if id == "" {
+					id = anchorID(line)
+				}
+				_, _ = w.Write([]byte(line))
+			}
+			_, _ = w.Write(mdNewline)
+		case opPre:
+			_, _ = w.Write(mdPreline)
+			for _, line := range b.lines {
+				// _, _ = w.Write(mdPre)
+				emphasize(w, line)
+			}
+			_, _ = w.Write(mdPreline)
+			_, _ = w.Write(mdNewline)
+		}
+	}
+}
+
+// heading returns the trimmed line if it passes as a section heading;
+// otherwise it returns the empty string.
+func heading(line string) string {
+	line = strings.TrimSpace(line)
+	if len(line) == 0 {
+		return ""
+	}
+
+	// a heading must start with an uppercase letter
+	r, _ := utf8.DecodeRuneInString(line)
+	if !unicode.IsLetter(r) || !unicode.IsUpper(r) {
+		return ""
+	}
+
+	// it must end in a letter or digit:
+	r, _ = utf8.DecodeLastRuneInString(line)
+	if !unicode.IsLetter(r) && !unicode.IsDigit(r) {
+		return ""
+	}
+
+	// exclude lines with illegal characters
+	if strings.ContainsAny(line, ",.;:!?+*/=()[]{}_^°&§~%#@<\">\\") {
+		return ""
+	}
+
+	// allow "'" for possessive "'s" only
+	for b := line; ; {
+		i := strings.IndexRune(b, '\'')
+		if i < 0 {
+			break
+		}
+		if i+1 >= len(b) || b[i+1] != 's' || (i+2 < len(b) && b[i+2] != ' ') {
+			return "" // not followed by "s "
+		}
+		b = b[i+2:]
+	}
+
+	return line
+}
+
 // Emphasize and escape a line of text for HTML. URLs are converted into links.
 func emphasize(w io.Writer, line string) {
 	for {
@@ -118,44 +202,11 @@ func unindent(block []string) {
 	}
 }
 
-// heading returns the trimmed line if it passes as a section heading;
-// otherwise it returns the empty string.
-func heading(line string) string {
-	line = strings.TrimSpace(line)
-	if len(line) == 0 {
-		return ""
-	}
+var nonAlphaNumRx = regexp.MustCompile(`[^a-zA-Z0-9]`)
 
-	// a heading must start with an uppercase letter
-	r, _ := utf8.DecodeRuneInString(line)
-	if !unicode.IsLetter(r) || !unicode.IsUpper(r) {
-		return ""
-	}
-
-	// it must end in a letter or digit:
-	r, _ = utf8.DecodeLastRuneInString(line)
-	if !unicode.IsLetter(r) && !unicode.IsDigit(r) {
-		return ""
-	}
-
-	// exclude lines with illegal characters
-	if strings.ContainsAny(line, ",.;:!?+*/=()[]{}_^°&§~%#@<\">\\") {
-		return ""
-	}
-
-	// allow "'" for possessive "'s" only
-	for b := line; ; {
-		i := strings.IndexRune(b, '\'')
-		if i < 0 {
-			break
-		}
-		if i+1 >= len(b) || b[i+1] != 's' || (i+2 < len(b) && b[i+2] != ' ') {
-			return "" // not followed by "s "
-		}
-		b = b[i+2:]
-	}
-
-	return line
+func anchorID(line string) string {
+	// Add a "hdr-" prefix to avoid conflicting with IDs used for package symbols.
+	return "hdr-" + nonAlphaNumRx.ReplaceAllString(line, "_")
 }
 
 type op int
@@ -169,59 +220,6 @@ const (
 type block struct {
 	op    op
 	lines []string
-}
-
-var nonAlphaNumRx = regexp.MustCompile(`[^a-zA-Z0-9]`)
-
-func anchorID(line string) string {
-	// Add a "hdr-" prefix to avoid conflicting with IDs used for package symbols.
-	return "hdr-" + nonAlphaNumRx.ReplaceAllString(line, "_")
-}
-
-// ToMD converts comment text to formatted Markdown.
-// The comment was prepared by DocReader,
-// so it is known not to have leading, trailing blank lines
-// nor to have trailing spaces at the end of lines.
-// The comment markers have already been removed.
-//
-// Each span of unindented non-blank lines is converted into
-// a single paragraph. There is one exception to the rule: a span that
-// consists of a single line, is followed by another paragraph span,
-// begins with a capital letter, and contains no punctuation
-// is formatted as a heading.
-//
-// A span of indented lines is converted into a `<pre>` block,
-// with the common indent prefix removed.
-//
-// URLs in the comment text are converted into links.
-func ToMD(w io.Writer, text string) {
-	for _, b := range blocks(text) {
-		switch b.op {
-		case opPara:
-			for _, line := range b.lines {
-				emphasize(w, line)
-			}
-			_, _ = w.Write(mdNewline) // trailing newline to emulate </p>
-		case opHead:
-			_, _ = w.Write(mdH3)
-			id := ""
-			for _, line := range b.lines {
-				if id == "" {
-					id = anchorID(line)
-				}
-				_, _ = w.Write([]byte(line))
-			}
-			_, _ = w.Write(mdNewline)
-		case opPre:
-			_, _ = w.Write(mdPreline)
-			for _, line := range b.lines {
-				// _, _ = w.Write(mdPre)
-				emphasize(w, line)
-			}
-			_, _ = w.Write(mdPreline)
-			_, _ = w.Write(mdNewline)
-		}
-	}
 }
 
 func blocks(text string) []block {

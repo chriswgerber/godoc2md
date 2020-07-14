@@ -14,7 +14,7 @@ import (
 var (
 	cmdName = "godoc2md"
 
-	defaultURLPrefix = "github.com"
+	defaultURLPrefix = ""
 
 	// Config contains the configuration for the CLI. To populate config, call
 	// `Parse()`.

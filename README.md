@@ -4,7 +4,6 @@
 
 * [Overview](#pkg-overview)
 * [Index](#pkg-index)
-* [Examples](#pkg-examples)
 * [Subdirectories](#pkg-subdirectories)
 
 ## <a name="pkg-overview">Overview</a>
@@ -62,10 +61,6 @@ $ godoc2md
   * [func NewTemplateUtils(cfg *Cli) TemplateUtils](#NewTemplateUtils)
   * [func (t TemplateUtils) Methods() map[string]interface{}](#TemplateUtils.Methods)
 
-#### <a name="pkg-examples">Examples</a>
-
-* [Parse](#example_Parse)
-
 #### <a name="pkg-files">Package files</a>
 
 [comment.go](/github.com/thatgerber/godoc2md/comment.go) [config.go](/github.com/thatgerber/godoc2md/config.go) [doc.go](/github.com/thatgerber/godoc2md/doc.go) [funcs.go](/github.com/thatgerber/godoc2md/funcs.go) [presentation.go](/github.com/thatgerber/godoc2md/presentation.go) [template.go](/github.com/thatgerber/godoc2md/template.go) 
@@ -100,36 +95,34 @@ var (
 )
 ```
 
-## <a name="NewPresentation">func</a> [NewPresentation](/presentation.go#L46)
+## <a name="NewPresentation">func</a> [NewPresentation](https://github.com/thatgerber/godoc2md/blob/master/presentation.go#L46)
 
 ```go
 func NewPresentation(corpus *godoc.Corpus, config *Cli) *godoc.Presentation
 ```
 
-## <a name="ToMD">func</a> [ToMD](/comment.go#L197)
+## <a name="ToMD">func</a> [ToMD](https://github.com/thatgerber/godoc2md/blob/master/comment.go#L58)
 
 ```go
 func ToMD(w io.Writer, text string)
 ```
 
-ToMD converts comment text to formatted Markdown.
-The comment was prepared by DocReader,
-so it is known not to have leading, trailing blank lines
-nor to have trailing spaces at the end of lines.
-The comment markers have already been removed.
+ToMD converts comment text to formatted Markdown. The comment was prepared by
+DocReader, so it is known not to have leading, trailing blank lines nor to
+have trailing spaces at the end of lines. The comment markers have already
+been removed.
 
-Each span of unindented non-blank lines is converted into
-a single paragraph. There is one exception to the rule: a span that
-consists of a single line, is followed by another paragraph span,
-begins with a capital letter, and contains no punctuation
-is formatted as a heading.
+Each span of unindented non-blank lines is converted into a single paragraph.
+There is one exception to the rule: a span that consists of a single line, is
+followed by another paragraph span, begins with a capital letter, and
+contains no punctuation is formatted as a heading.
 
-A span of indented lines is converted into a `<pre>` block,
-with the common indent prefix removed.
+A span of indented lines is converted into a `<pre>` block, with the common
+indent prefix removed.
 
 URLs in the comment text are converted into links.
 
-## <a name="Cli">type</a> [Cli](/config.go#L74)
+## <a name="Cli">type</a> [Cli](https://github.com/thatgerber/godoc2md/blob/master/config.go#L74)
 
 ```go
 type Cli struct {
@@ -155,13 +148,13 @@ type Cli struct {
 }
 ```
 
-### <a name="Parse">func</a> [Parse](/config.go#L96)
+### <a name="Parse">func</a> [Parse](https://github.com/thatgerber/godoc2md/blob/master/config.go#L96)
 
 ```go
 func Parse() ([]string, *Cli)
 ```
 
-## <a name="TemplateUtils">type</a> [TemplateUtils](/funcs.go#L24)
+## <a name="TemplateUtils">type</a> [TemplateUtils](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L26)
 
 ```go
 type TemplateUtils struct {
@@ -169,13 +162,13 @@ type TemplateUtils struct {
 }
 ```
 
-### <a name="NewTemplateUtils">func</a> [NewTemplateUtils](/funcs.go#L30)
+### <a name="NewTemplateUtils">func</a> [NewTemplateUtils](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L32)
 
 ```go
 func NewTemplateUtils(cfg *Cli) TemplateUtils
 ```
 
-### <a name="TemplateUtils.Methods">func</a> (TemplateUtils) [Methods](/funcs.go#L38)
+### <a name="TemplateUtils.Methods">func</a> (TemplateUtils) [Methods](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L40)
 
 ```go
 func (t TemplateUtils) Methods() map[string]interface{}
