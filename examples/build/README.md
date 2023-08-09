@@ -4,12 +4,14 @@
 
 * [Overview](#pkg-overview)
 * [Index](#pkg-index)
+* [Subdirectories](#pkg-subdirectories)
 
 ## <a name="pkg-overview">Overview</a>
 
 Package build gathers information about Go packages.
 
-### Go Path
+# Go Path
+
 The Go path is a list of directory trees containing Go source code.
 It is consulted to resolve imports that cannot be found in the standard
 Go tree. The default path is the value of the GOPATH environment
@@ -61,125 +63,25 @@ GOPATH=/home/user/gocode
                 bar.a          (installed package object)
 ```
 
-### Build Constraints
-A build constraint, also known as a build tag, is a line comment that begins
+# Build Constraints
+
+A build constraint, also known as a build tag, is a condition under which a
+file should be included in the package. Build constraints are given by a
+line comment that begins
 
 ```
-// +build
+//go:build
 ```
 
-that lists the conditions under which a file should be included in the package.
-Constraints may appear in any kind of source file (not just Go), but
-they must appear near the top of the file, preceded
-only by blank lines and other line comments. These rules mean that in Go
-files a build constraint must appear before the package clause.
+Build constraints may also be part of a file's name
+(for example, source_windows.go will only be included if the target
+operating system is windows).
 
-To distinguish build constraints from package documentation, a series of
-build constraints must be followed by a blank line.
+See 'go help buildconstraint'
+(<a href="https://golang.org/cmd/go/#hdr-Build_constraints">https://golang.org/cmd/go/#hdr-Build_constraints</a>) for details.
 
-A build constraint is evaluated as the OR of space-separated options.
-Each option evaluates as the AND of its comma-separated terms.
-Each term consists of letters, digits, underscores, and dots.
-A term may be negated with a preceding !.
-For example, the build constraint:
+# Binary-Only Packages
 
-```
-// +build linux,386 darwin,!cgo
-```
-
-corresponds to the boolean formula:
-
-```
-(linux AND 386) OR (darwin AND (NOT cgo))
-```
-
-A file may have multiple build constraints. The overall constraint is the AND
-of the individual constraints. That is, the build constraints:
-
-```
-// +build linux darwin
-// +build 386
-```
-
-corresponds to the boolean formula:
-
-```
-(linux OR darwin) AND 386
-```
-
-During a particular build, the following words are satisfied:
-
-```
-- the target operating system, as spelled by runtime.GOOS
-- the target architecture, as spelled by runtime.GOARCH
-- the compiler being used, either "gc" or "gccgo"
-- "cgo", if ctxt.CgoEnabled is true
-- "go1.1", from Go version 1.1 onward
-- "go1.2", from Go version 1.2 onward
-- "go1.3", from Go version 1.3 onward
-- "go1.4", from Go version 1.4 onward
-- "go1.5", from Go version 1.5 onward
-- "go1.6", from Go version 1.6 onward
-- "go1.7", from Go version 1.7 onward
-- "go1.8", from Go version 1.8 onward
-- "go1.9", from Go version 1.9 onward
-- "go1.10", from Go version 1.10 onward
-- "go1.11", from Go version 1.11 onward
-- "go1.12", from Go version 1.12 onward
-- "go1.13", from Go version 1.13 onward
-- "go1.14", from Go version 1.14 onward
-- any additional words listed in ctxt.BuildTags
-```
-
-There are no build tags for beta or minor releases.
-
-If a file's name, after stripping the extension and a possible _test suffix,
-matches any of the following patterns:
-
-```
-*_GOOS
-*_GOARCH
-*_GOOS_GOARCH
-```
-
-(example: source_windows_amd64.go) where GOOS and GOARCH represent
-any known operating system and architecture values respectively, then
-the file is considered to have an implicit build constraint requiring
-those terms (in addition to any explicit constraints in the file).
-
-To keep a file from being considered for the build:
-
-```
-// +build ignore
-```
-
-(any other unsatisfied word will work as well, but ``ignore'' is conventional.)
-
-To build a file only when using cgo, and only on Linux and OS X:
-
-```
-// +build linux,cgo darwin,cgo
-```
-
-Such a file is usually paired with another file implementing the
-default functionality for other systems, which in this case would
-carry the constraint:
-
-```
-// +build !linux,!darwin !cgo
-```
-
-Naming a file dns_windows.go will cause it to be included only when
-building the package for Windows; similarly, math_386.s will be included
-only when building the package for 32-bit x86.
-
-Using GOOS=android matches build tags and files as for GOOS=linux
-in addition to android tags and files.
-
-Using GOOS=illumos matches build tags and files as for GOOS=solaris
-in addition to illumos tags and files.
-
-### Binary-Only Packages
 In Go 1.12 and earlier, it was possible to distribute packages in binary
 form without including the source code used for compiling the package.
 The package was distributed with a source file not excluded by build
@@ -208,6 +110,7 @@ containing these comments for use in tools and error messages.
 
 ## <a name="pkg-index">Index</a>
 
+
 * [Variables](#pkg-variables)
 * [func ArchChar(goarch string) (string, error)](#ArchChar)
 * [func IsLocalImport(path string) bool](#IsLocalImport)
@@ -228,7 +131,7 @@ containing these comments for use in tools and error messages.
 
 #### <a name="pkg-files">Package files</a>
 
-[build.go](/go/build/build.go) [doc.go](/go/build/doc.go) [gc.go](/go/build/gc.go) [read.go](/go/build/read.go) [syslist.go](/go/build/syslist.go) [zcgo.go](/go/build/zcgo.go) 
+[build.go](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go) [doc.go](https://github.com/chriswgerber/godoc2md/blob/master/go/build/doc.go) [gc.go](https://github.com/chriswgerber/godoc2md/blob/master/go/build/gc.go) [read.go](https://github.com/chriswgerber/godoc2md/blob/master/go/build/read.go) [syslist.go](https://github.com/chriswgerber/godoc2md/blob/master/go/build/syslist.go) [zcgo.go](https://github.com/chriswgerber/godoc2md/blob/master/go/build/zcgo.go) 
 
 ## <a name="pkg-variables">Variables</a>
 
@@ -238,7 +141,7 @@ var ToolDir = getToolDir()
 
 ToolDir is the directory containing build tools.
 
-## <a name="ArchChar">func</a> [ArchChar](/build.go#L1839)
+## <a name="ArchChar">func</a> [ArchChar](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L2010)
 
 ```go
 func ArchChar(goarch string) (string, error)
@@ -250,7 +153,7 @@ the compiler and linker tool names, the default object file suffix,
 and the default linker output name. As of Go 1.5, those strings
 no longer vary by architecture; they are compile, link, .o, and a.out, respectively.
 
-## <a name="IsLocalImport">func</a> [IsLocalImport](/build.go#L1829)
+## <a name="IsLocalImport">func</a> [IsLocalImport](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L2000)
 
 ```go
 func IsLocalImport(path string) bool
@@ -259,14 +162,14 @@ func IsLocalImport(path string) bool
 IsLocalImport reports whether the import path is
 a local import path, like ".", "..", "./foo", or "../foo".
 
-## <a name="Context">type</a> [Context](/build.go#L33)
+## <a name="Context">type</a> [Context](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L34)
 
 ```go
 type Context struct {
     GOARCH string // target architecture
     GOOS   string // target operating system
     GOROOT string // Go root
-    GOPATH string // Go path
+    GOPATH string // Go paths
 
     // Dir is the caller's working directory, or the empty string to use
     // the current directory of the running process. In module mode, this is used
@@ -277,19 +180,21 @@ type Context struct {
     Dir string
 
     CgoEnabled  bool   // whether cgo files are included
-    UseAllFiles bool   // use files regardless of +build lines, file names
+    UseAllFiles bool   // use files regardless of go:build lines, file names
     Compiler    string // compiler to assume when computing target paths
 
-    // The build and release tags specify build constraints
-    // that should be considered satisfied when processing +build lines.
+    // The build, tool, and release tags specify build constraints
+    // that should be considered satisfied when processing go:build lines.
     // Clients creating a new context may customize BuildTags, which
-    // defaults to empty, but it is usually an error to customize ReleaseTags,
-    // which defaults to the list of Go releases the current release is compatible with.
+    // defaults to empty, but it is usually an error to customize ToolTags or ReleaseTags.
+    // ToolTags defaults to build tags appropriate to the current Go toolchain configuration.
+    // ReleaseTags defaults to the list of Go releases the current release is compatible with.
     // BuildTags is not set for the Default build Context.
-    // In addition to the BuildTags and ReleaseTags, build constraints
+    // In addition to the BuildTags, ToolTags, and ReleaseTags, build constraints
     // consider the values of GOARCH and GOOS as satisfied tags.
     // The last element in ReleaseTags is assumed to be the current release.
     BuildTags   []string
+    ToolTags    []string
     ReleaseTags []string
 
     // The install suffix specifies a suffix to use in the name of the installation
@@ -325,10 +230,10 @@ type Context struct {
     // filepath.EvalSymlinks.
     HasSubdir func(root, dir string) (rel string, ok bool)
 
-    // ReadDir returns a slice of os.FileInfo, sorted by Name,
+    // ReadDir returns a slice of fs.FileInfo, sorted by Name,
     // describing the content of the named directory.
-    // If ReadDir is nil, Import uses ioutil.ReadDir.
-    ReadDir func(dir string) ([]os.FileInfo, error)
+    // If ReadDir is nil, Import uses os.ReadDir.
+    ReadDir func(dir string) ([]fs.FileInfo, error)
 
     // OpenFile opens a file (not a directory) for reading.
     // If OpenFile is nil, Import uses os.Open.
@@ -346,7 +251,7 @@ Default is the default Context for builds.
 It uses the GOARCH, GOOS, GOROOT, and GOPATH environment variables
 if set, or else the compiled code's GOARCH, GOOS, and GOROOT.
 
-### <a name="Context.Import">func</a> (\*Context) [Import](/build.go#L509)
+### <a name="Context.Import">func</a> (\*Context) [Import](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L541)
 
 ```go
 func (ctxt *Context) Import(path string, srcDir string, mode ImportMode) (*Package, error)
@@ -370,7 +275,7 @@ considered part of the package except for:
 If an error occurs, Import returns a non-nil error and a non-nil
 *Package containing partial information.
 
-### <a name="Context.ImportDir">func</a> (\*Context) [ImportDir](/build.go#L457)
+### <a name="Context.ImportDir">func</a> (\*Context) [ImportDir](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L488)
 
 ```go
 func (ctxt *Context) ImportDir(dir string, mode ImportMode) (*Package, error)
@@ -379,7 +284,7 @@ func (ctxt *Context) ImportDir(dir string, mode ImportMode) (*Package, error)
 ImportDir is like Import but processes the Go package found in
 the named directory.
 
-### <a name="Context.MatchFile">func</a> (\*Context) [MatchFile](/build.go#L1295)
+### <a name="Context.MatchFile">func</a> (\*Context) [MatchFile](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L1374)
 
 ```go
 func (ctxt *Context) MatchFile(dir, name string) (match bool, err error)
@@ -392,7 +297,7 @@ of that directory.
 MatchFile considers the name of the file and may use ctxt.OpenFile to
 read some or all of the file's content.
 
-### <a name="Context.SrcDirs">func</a> (\*Context) [SrcDirs](/build.go#L253)
+### <a name="Context.SrcDirs">func</a> (\*Context) [SrcDirs](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L266)
 
 ```go
 func (ctxt *Context) SrcDirs() []string
@@ -402,7 +307,7 @@ SrcDirs returns a list of package source root directories.
 It draws from the current Go root and Go path but omits directories
 that do not exist.
 
-## <a name="ImportMode">type</a> [ImportMode](/build.go#L348)
+## <a name="ImportMode">type</a> [ImportMode](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L366)
 
 ```go
 type ImportMode uint
@@ -456,7 +361,7 @@ const (
 )
 ```
 
-## <a name="MultiplePackageError">type</a> [MultiplePackageError](/build.go#L474)
+## <a name="MultiplePackageError">type</a> [MultiplePackageError](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L505)
 
 ```go
 type MultiplePackageError struct {
@@ -469,13 +374,13 @@ type MultiplePackageError struct {
 MultiplePackageError describes a directory containing
 multiple buildable Go source files for multiple packages.
 
-### <a name="MultiplePackageError.Error">func</a> (\*MultiplePackageError) [Error](/build.go#L480)
+### <a name="MultiplePackageError.Error">func</a> (\*MultiplePackageError) [Error](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L511)
 
 ```go
 func (e *MultiplePackageError) Error() string
 ```
 
-## <a name="NoGoError">type</a> [NoGoError](/build.go#L464)
+## <a name="NoGoError">type</a> [NoGoError](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L495)
 
 ```go
 type NoGoError struct {
@@ -487,13 +392,13 @@ NoGoError is the error used by Import to describe a directory
 containing no buildable Go source files. (It may still contain
 test files, files hidden by build tags, and so on.)
 
-### <a name="NoGoError.Error">func</a> (\*NoGoError) [Error](/build.go#L468)
+### <a name="NoGoError.Error">func</a> (\*NoGoError) [Error](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L499)
 
 ```go
 func (e *NoGoError) Error() string
 ```
 
-## <a name="Package">type</a> [Package](/build.go#L395)
+## <a name="Package">type</a> [Package](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L413)
 
 ```go
 type Package struct {
@@ -514,19 +419,20 @@ type Package struct {
     BinaryOnly    bool     // cannot be rebuilt from source (has //go:binary-only-package comment)
 
     // Source files
-    GoFiles        []string // .go source files (excluding CgoFiles, TestGoFiles, XTestGoFiles)
-    CgoFiles       []string // .go source files that import "C"
-    IgnoredGoFiles []string // .go source files ignored for this build
-    InvalidGoFiles []string // .go source files with detected problems (parse error, wrong package name, and so on)
-    CFiles         []string // .c source files
-    CXXFiles       []string // .cc, .cpp and .cxx source files
-    MFiles         []string // .m (Objective-C) source files
-    HFiles         []string // .h, .hh, .hpp and .hxx source files
-    FFiles         []string // .f, .F, .for and .f90 Fortran source files
-    SFiles         []string // .s source files
-    SwigFiles      []string // .swig files
-    SwigCXXFiles   []string // .swigcxx files
-    SysoFiles      []string // .syso system object files to add to archive
+    GoFiles           []string // .go source files (excluding CgoFiles, TestGoFiles, XTestGoFiles)
+    CgoFiles          []string // .go source files that import "C"
+    IgnoredGoFiles    []string // .go source files ignored for this build (including ignored _test.go files)
+    InvalidGoFiles    []string // .go source files with detected problems (parse error, wrong package name, and so on)
+    IgnoredOtherFiles []string // non-.go source files ignored for this build
+    CFiles            []string // .c source files
+    CXXFiles          []string // .cc, .cpp and .cxx source files
+    MFiles            []string // .m (Objective-C) source files
+    HFiles            []string // .h, .hh, .hpp and .hxx source files
+    FFiles            []string // .f, .F, .for and .f90 Fortran source files
+    SFiles            []string // .s source files
+    SwigFiles         []string // .swig files
+    SwigCXXFiles      []string // .swigcxx files
+    SysoFiles         []string // .syso system object files to add to archive
 
     // Cgo directives
     CgoCFLAGS    []string // Cgo CFLAGS directives
@@ -536,23 +442,35 @@ type Package struct {
     CgoLDFLAGS   []string // Cgo LDFLAGS directives
     CgoPkgConfig []string // Cgo pkg-config directives
 
-    // Dependency information
-    Imports   []string                    // import paths from GoFiles, CgoFiles
-    ImportPos map[string][]token.Position // line information for Imports
-
     // Test information
-    TestGoFiles    []string                    // _test.go files in package
+    TestGoFiles  []string // _test.go files in package
+    XTestGoFiles []string // _test.go files outside package
+
+    // Dependency information
+    Imports        []string                    // import paths from GoFiles, CgoFiles
+    ImportPos      map[string][]token.Position // line information for Imports
     TestImports    []string                    // import paths from TestGoFiles
     TestImportPos  map[string][]token.Position // line information for TestImports
-    XTestGoFiles   []string                    // _test.go files outside package
     XTestImports   []string                    // import paths from XTestGoFiles
     XTestImportPos map[string][]token.Position // line information for XTestImports
+
+    // //go:embed patterns found in Go source files
+    // For example, if a source file says
+    //	//go:embed a* b.c
+    // then the list will contain those two strings as separate entries.
+    // (See package embed for more details about //go:embed.)
+    EmbedPatterns        []string                    // patterns from GoFiles, CgoFiles
+    EmbedPatternPos      map[string][]token.Position // line information for EmbedPatterns
+    TestEmbedPatterns    []string                    // patterns from TestGoFiles
+    TestEmbedPatternPos  map[string][]token.Position // line information for TestEmbedPatterns
+    XTestEmbedPatterns   []string                    // patterns from XTestGoFiles
+    XTestEmbedPatternPos map[string][]token.Position // line information for XTestEmbedPatternPos
 }
 ```
 
 A Package describes the Go package found in a directory.
 
-### <a name="Import">func</a> [Import](/build.go#L1380)
+### <a name="Import">func</a> [Import](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L1487)
 
 ```go
 func Import(path, srcDir string, mode ImportMode) (*Package, error)
@@ -560,7 +478,7 @@ func Import(path, srcDir string, mode ImportMode) (*Package, error)
 
 Import is shorthand for Default.Import.
 
-### <a name="ImportDir">func</a> [ImportDir](/build.go#L1385)
+### <a name="ImportDir">func</a> [ImportDir](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L1492)
 
 ```go
 func ImportDir(dir string, mode ImportMode) (*Package, error)
@@ -568,7 +486,7 @@ func ImportDir(dir string, mode ImportMode) (*Package, error)
 
 ImportDir is shorthand for Default.ImportDir.
 
-### <a name="Package.IsCommand">func</a> (\*Package) [IsCommand](/build.go#L451)
+### <a name="Package.IsCommand">func</a> (\*Package) [IsCommand](https://github.com/chriswgerber/godoc2md/blob/master/go/build/build.go#L482)
 
 ```go
 func (p *Package) IsCommand() bool
@@ -579,4 +497,5 @@ command to be installed (not just a library).
 Packages named "main" are treated as commands.
 
 - - -
-Generated by [godoc2md](http://github.com/thatgerber/godoc2md)
+Created: 9-Aug-2023 20:02:57 +0000
+Generated by [godoc2md](http://github.com/chriswgerber/godoc2md)

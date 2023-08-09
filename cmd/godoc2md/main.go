@@ -14,7 +14,7 @@ import (
 	"golang.org/x/tools/godoc"
 	"golang.org/x/tools/godoc/vfs"
 
-	"github.com/thatgerber/godoc2md"
+	"github.com/chriswgerber/godoc2md"
 )
 
 func main() {

@@ -32,7 +32,6 @@ var (
 		ShowExamples:      flag.Bool("ex", false, "show examples in command line mode"),
 		DeclLinks:         flag.Bool("links", true, "link identifiers to their declarations"),
 		SrcLinkHashFormat: flag.String("hashformat", "#L%d", "source link URL hash format"),
-		SrcLinkFormat:     flag.String("srclink", "", "if set, format for filename of source link"),
 	}
 )
 
@@ -65,7 +64,7 @@ func getBasePkgPrefix(potench string) *string {
 	// Try and guess the package path
 	p := os.Getenv("GOPATH")
 	if p != "" {
-		if newPath := strings.TrimPrefix(cwd, path.Join(p, "/src/")); newPath != "" {
+		if newPath := strings.TrimPrefix(p, path.Join(p, "/src/")); newPath != "" {
 			return &newPath
 		}
 	}
@@ -93,7 +92,6 @@ type Cli struct {
 	// use the same format. For example Bitbucket Enterprise uses `#%d`. This option provides the
 	// user the option to switch the format as needed and still remain backwards compatible.
 	SrcLinkHashFormat *string
-	SrcLinkFormat     *string
 }
 
 func Parse() ([]string, *Cli) {

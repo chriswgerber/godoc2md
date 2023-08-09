@@ -1,4 +1,5 @@
 PKG_NAME:=godoc2md
+PROJECT_NAME=github.com/chriswgerber/godoc2md
 
 EXE=./$(PKG_NAME)
 
@@ -24,4 +25,4 @@ examples:
 .PHONY: examples readme all
 
 README.md: $(PKG_NAME)
-	$(EXE) github.com/thatgerber/godoc2md > $@
+	$(EXE) -v github.com/chriswgerber/godoc2md > $@

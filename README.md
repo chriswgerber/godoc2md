@@ -1,6 +1,6 @@
 # godoc2md
 
-`import "github.com/thatgerber/godoc2md"`
+`import "github.com/chriswgerber/godoc2md"`
 
 * [Overview](#pkg-overview)
 * [Index](#pkg-index)
@@ -11,7 +11,7 @@
 Package godoc2md contains the code used to perform the CLI command
 `godoc2md`.
 
-[![GoDoc](<a href="https://godoc.org/github.com/ThatGerber/godoc2md?status.svg">https://godoc.org/github.com/ThatGerber/godoc2md?status.svg</a>)](<a href="https://godoc.org/github.com/ThatGerber/godoc2md">https://godoc.org/github.com/ThatGerber/godoc2md</a>)
+[![GoDoc](<a href="https://godoc.org/github.com/chriswgerber/godoc2md?status.svg">https://godoc.org/github.com/chriswgerber/godoc2md?status.svg</a>)](<a href="https://godoc.org/github.com/chriswgerber/godoc2md">https://godoc.org/github.com/chriswgerber/godoc2md</a>)
 
 This package is forked from <a href="https://github.com/davecheney/godoc2md">https://github.com/davecheney/godoc2md</a>
 which is no longer updated.
@@ -60,7 +60,7 @@ $ godoc2md
   * [func Parse() ([]string, *Cli)](#Parse)
 * [type TemplateUtils](#TemplateUtils)
   * [func NewTemplateUtils(cfg *Cli) TemplateUtils](#NewTemplateUtils)
-  * [func (t TemplateUtils) CommendToMD(comment string) string](#TemplateUtils.CommendToMD)
+  * [func (t TemplateUtils) CommentToMD(comment string) string](#TemplateUtils.CommentToMD)
   * [func (t TemplateUtils) GetCurrentTime() string](#TemplateUtils.GetCurrentTime)
   * [func (t TemplateUtils) GetFullURL(pkg *godoc.PageInfo, decl ast.Decl) string](#TemplateUtils.GetFullURL)
   * [func (t TemplateUtils) GetSourceFileURL(s string) string](#TemplateUtils.GetSourceFileURL)
@@ -71,7 +71,7 @@ $ godoc2md
 
 #### <a name="pkg-files">Package files</a>
 
-[comment.go](https://github.com/thatgerber/godoc2md/blob/master/comment.go) [config.go](https://github.com/thatgerber/godoc2md/blob/master/config.go) [doc.go](https://github.com/thatgerber/godoc2md/blob/master/doc.go) [funcs.go](https://github.com/thatgerber/godoc2md/blob/master/funcs.go) [presentation.go](https://github.com/thatgerber/godoc2md/blob/master/presentation.go) [template.go](https://github.com/thatgerber/godoc2md/blob/master/template.go) 
+[comment.go](https://github.com/chriswgerber/godoc2md/blob/master/comment.go) [config.go](https://github.com/chriswgerber/godoc2md/blob/master/config.go) [doc.go](https://github.com/chriswgerber/godoc2md/blob/master/doc.go) [funcs.go](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go) [presentation.go](https://github.com/chriswgerber/godoc2md/blob/master/presentation.go) [template.go](https://github.com/chriswgerber/godoc2md/blob/master/template.go) 
 
 ## <a name="pkg-constants">Constants</a>
 
@@ -101,7 +101,6 @@ var (
         ShowExamples:      flag.Bool("ex", false, "show examples in command line mode"),
         DeclLinks:         flag.Bool("links", true, "link identifiers to their declarations"),
         SrcLinkHashFormat: flag.String("hashformat", "#L%d", "source link URL hash format"),
-        SrcLinkFormat:     flag.String("srclink", "", "if set, format for filename of source link"),
     }
 )
 ```
@@ -112,13 +111,13 @@ var (
 )
 ```
 
-## <a name="NewPresentation">func</a> [NewPresentation](https://github.com/thatgerber/godoc2md/blob/master/presentation.go#L46)
+## <a name="NewPresentation">func</a> [NewPresentation](https://github.com/chriswgerber/godoc2md/blob/master/presentation.go#L46)
 
 ```go
 func NewPresentation(corpus *godoc.Corpus, config *Cli) *godoc.Presentation
 ```
 
-## <a name="ToMD">func</a> [ToMD](https://github.com/thatgerber/godoc2md/blob/master/comment.go#L58)
+## <a name="ToMD">func</a> [ToMD](https://github.com/chriswgerber/godoc2md/blob/master/comment.go#L58)
 
 ```go
 func ToMD(w io.Writer, text string)
@@ -139,7 +138,7 @@ indent prefix removed.
 
 URLs in the comment text are converted into links.
 
-## <a name="Cli">type</a> [Cli](https://github.com/thatgerber/godoc2md/blob/master/config.go#L76)
+## <a name="Cli">type</a> [Cli](https://github.com/chriswgerber/godoc2md/blob/master/config.go#L75)
 
 ```go
 type Cli struct {
@@ -162,17 +161,16 @@ type Cli struct {
     // use the same format. For example Bitbucket Enterprise uses `#%d`. This option provides the
     // user the option to switch the format as needed and still remain backwards compatible.
     SrcLinkHashFormat *string
-    SrcLinkFormat     *string
 }
 ```
 
-### <a name="Parse">func</a> [Parse](https://github.com/thatgerber/godoc2md/blob/master/config.go#L99)
+### <a name="Parse">func</a> [Parse](https://github.com/chriswgerber/godoc2md/blob/master/config.go#L97)
 
 ```go
 func Parse() ([]string, *Cli)
 ```
 
-## <a name="TemplateUtils">type</a> [TemplateUtils](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L28)
+## <a name="TemplateUtils">type</a> [TemplateUtils](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go#L28)
 
 ```go
 type TemplateUtils struct {
@@ -186,7 +184,7 @@ provided text template.
 TemplateUtils most likely cannot be created directly, and a new instance
 should be created by calling `NewTemplateUtils(config)`.
 
-### <a name="NewTemplateUtils">func</a> [NewTemplateUtils](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L38)
+### <a name="NewTemplateUtils">func</a> [NewTemplateUtils](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go#L38)
 
 ```go
 func NewTemplateUtils(cfg *Cli) TemplateUtils
@@ -195,15 +193,15 @@ func NewTemplateUtils(cfg *Cli) TemplateUtils
 NewTemplateUtils returns a new TemplateUtils object configured from the
 provided CLI instance.
 
-### <a name="TemplateUtils.CommendToMD">func</a> (TemplateUtils) [CommendToMD](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L68)
+### <a name="TemplateUtils.CommentToMD">func</a> (TemplateUtils) [CommentToMD](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go#L68)
 
 ```go
-func (t TemplateUtils) CommendToMD(comment string) string
+func (t TemplateUtils) CommentToMD(comment string) string
 ```
 
-CommendToMD converts the provided text, from Go source comment, into markdown.
+CommentToMD converts the provided text, from Go source comment, into markdown.
 
-### <a name="TemplateUtils.GetCurrentTime">func</a> (TemplateUtils) [GetCurrentTime](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L152)
+### <a name="TemplateUtils.GetCurrentTime">func</a> (TemplateUtils) [GetCurrentTime](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go#L152)
 
 ```go
 func (t TemplateUtils) GetCurrentTime() string
@@ -211,7 +209,7 @@ func (t TemplateUtils) GetCurrentTime() string
 
 GetCurrentTime returns the current time in UTC using the configured format.
 
-### <a name="TemplateUtils.GetFullURL">func</a> (TemplateUtils) [GetFullURL](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L76)
+### <a name="TemplateUtils.GetFullURL">func</a> (TemplateUtils) [GetFullURL](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go#L76)
 
 ```go
 func (t TemplateUtils) GetFullURL(pkg *godoc.PageInfo, decl ast.Decl) string
@@ -220,7 +218,7 @@ func (t TemplateUtils) GetFullURL(pkg *godoc.PageInfo, decl ast.Decl) string
 GetFullURL returns the URL, including line number, of the provided source
 code declaration.
 
-### <a name="TemplateUtils.GetSourceFileURL">func</a> (TemplateUtils) [GetSourceFileURL](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L113)
+### <a name="TemplateUtils.GetSourceFileURL">func</a> (TemplateUtils) [GetSourceFileURL](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go#L113)
 
 ```go
 func (t TemplateUtils) GetSourceFileURL(s string) string
@@ -228,7 +226,7 @@ func (t TemplateUtils) GetSourceFileURL(s string) string
 
 GetSourceFileURL reads the provided string and converts it into a URL.
 
-### <a name="TemplateUtils.MDEscapeGo">func</a> (TemplateUtils) [MDEscapeGo](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L147)
+### <a name="TemplateUtils.MDEscapeGo">func</a> (TemplateUtils) [MDEscapeGo](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go#L147)
 
 ```go
 func (t TemplateUtils) MDEscapeGo(text string) string
@@ -236,7 +234,7 @@ func (t TemplateUtils) MDEscapeGo(text string) string
 
 MDEscapeGo fences a string of text as Go Code.
 
-### <a name="TemplateUtils.MDEscapeInline">func</a> (TemplateUtils) [MDEscapeInline](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L139)
+### <a name="TemplateUtils.MDEscapeInline">func</a> (TemplateUtils) [MDEscapeInline](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go#L139)
 
 ```go
 func (t TemplateUtils) MDEscapeInline(text string) string
@@ -244,7 +242,7 @@ func (t TemplateUtils) MDEscapeInline(text string) string
 
 MDEscapeInline escapes inline emphasis and bold marks.
 
-### <a name="TemplateUtils.Methods">func</a> (TemplateUtils) [Methods](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L51)
+### <a name="TemplateUtils.Methods">func</a> (TemplateUtils) [Methods](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go#L51)
 
 ```go
 func (t TemplateUtils) Methods() map[string]interface{}
@@ -254,7 +252,7 @@ Methods returns a map of name to func of all the methods of this struct. It's
 provided to the presenter and the keys are made available as functions to the
 template.
 
-### <a name="TemplateUtils.StripBasePrefix">func</a> (TemplateUtils) [StripBasePrefix](https://github.com/thatgerber/godoc2md/blob/master/funcs.go#L134)
+### <a name="TemplateUtils.StripBasePrefix">func</a> (TemplateUtils) [StripBasePrefix](https://github.com/chriswgerber/godoc2md/blob/master/funcs.go#L134)
 
 ```go
 func (t TemplateUtils) StripBasePrefix(path string) string
@@ -263,5 +261,5 @@ func (t TemplateUtils) StripBasePrefix(path string) string
 StripBasePrefix removes the configured basePrefix from the provided string.
 
 - - -
-Created: 14-Jul-2020 16:57:55 +0000
-Generated by [godoc2md](http://github.com/thatgerber/godoc2md)
+Created: 9-Aug-2023 20:02:57 +0000
+Generated by [godoc2md](http://github.com/chriswgerber/godoc2md)

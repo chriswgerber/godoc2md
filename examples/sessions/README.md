@@ -37,7 +37,8 @@ import (
 // environmental variable, or flag (or both), and don't accidentally commit it
 // alongside your code. Ensure your key is sufficiently random - i.e. use Go's
 // crypto/rand or securecookie.GenerateRandomKey(32) and persist the result.
-var store = sessions.NewCookieStore(os.Getenv("SESSION_KEY"))
+// Ensure SESSION_KEY exists in the environment, or sessions will fail.
+var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 func MyHandler(w http.ResponseWriter, r *http.Request) {
 	// Get a session. Get() always returns a session, even if empty.
@@ -51,7 +52,11 @@ func MyHandler(w http.ResponseWriter, r *http.Request) {
 	session.Values["foo"] = "bar"
 	session.Values[42] = 43
 	// Save it before we write to the response/return from the handler.
-	session.Save(r, w)
+	err = session.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 ```
 
@@ -91,7 +96,11 @@ func MyHandler(w http.ResponseWriter, r *http.Request) {
 		// Set a new flash.
 		session.AddFlash("Hello, flash messages world!")
 	}
-	session.Save(r, w)
+	err = session.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 ```
 
@@ -204,7 +213,11 @@ func MyHandler(w http.ResponseWriter, r *http.Request) {
 	session2, _ := store.Get(r, "session-two")
 	session2.Values[42] = 43
 	// Save all sessions.
-	sessions.Save(r, w)
+	err = sessions.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 ```
 
@@ -247,9 +260,9 @@ session to a common registry. Save() uses it to save all registered sessions.
 
 #### <a name="pkg-files">Package files</a>
 
-[cookie_go111.go](/github.com/gorilla/sessions/cookie_go111.go) [doc.go](/github.com/gorilla/sessions/doc.go) [lex.go](/github.com/gorilla/sessions/lex.go) [options_go111.go](/github.com/gorilla/sessions/options_go111.go) [sessions.go](/github.com/gorilla/sessions/sessions.go) [store.go](/github.com/gorilla/sessions/store.go) 
+[cookie_go111.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/cookie_go111.go) [doc.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/doc.go) [lex.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/lex.go) [options_go111.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/options_go111.go) [sessions.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go) [store.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go) 
 
-## <a name="NewCookie">func</a> [NewCookie](/sessions.go#L180)
+## <a name="NewCookie">func</a> [NewCookie](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L180)
 
 ```go
 func NewCookie(name, value string, options *Options) *http.Cookie
@@ -259,7 +272,7 @@ NewCookie returns an http.Cookie with the options set. It also sets
 the Expires field calculated based on the MaxAge value, for Internet
 Explorer compatibility.
 
-## <a name="Save">func</a> [Save](/sessions.go#L173)
+## <a name="Save">func</a> [Save](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L173)
 
 ```go
 func Save(r *http.Request, w http.ResponseWriter) error
@@ -267,7 +280,7 @@ func Save(r *http.Request, w http.ResponseWriter) error
 
 Save saves all sessions used during the current request.
 
-## <a name="CookieStore">type</a> [CookieStore](/store.go#L64)
+## <a name="CookieStore">type</a> [CookieStore](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L64)
 
 ```go
 type CookieStore struct {
@@ -278,7 +291,7 @@ type CookieStore struct {
 
 CookieStore stores sessions using secure cookies.
 
-### <a name="NewCookieStore">func</a> [NewCookieStore](/store.go#L50)
+### <a name="NewCookieStore">func</a> [NewCookieStore](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L50)
 
 ```go
 func NewCookieStore(keyPairs ...[]byte) *CookieStore
@@ -297,7 +310,7 @@ It is recommended to use an authentication key with 32 or 64 bytes.
 The encryption key, if set, must be either 16, 24, or 32 bytes to select
 AES-128, AES-192, or AES-256 modes.
 
-### <a name="CookieStore.Get">func</a> (\*CookieStore) [Get](/store.go#L76)
+### <a name="CookieStore.Get">func</a> (\*CookieStore) [Get](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L76)
 
 ```go
 func (s *CookieStore) Get(r *http.Request, name string) (*Session, error)
@@ -311,7 +324,7 @@ the session to check if it is an existing session or a new one.
 It returns a new session and an error if the session exists but could
 not be decoded.
 
-### <a name="CookieStore.MaxAge">func</a> (\*CookieStore) [MaxAge](/store.go#L116)
+### <a name="CookieStore.MaxAge">func</a> (\*CookieStore) [MaxAge](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L116)
 
 ```go
 func (s *CookieStore) MaxAge(age int)
@@ -321,7 +334,7 @@ MaxAge sets the maximum age for the store and the underlying cookie
 implementation. Individual sessions can be deleted by setting Options.MaxAge
 = -1 for that session.
 
-### <a name="CookieStore.New">func</a> (\*CookieStore) [New](/store.go#L85)
+### <a name="CookieStore.New">func</a> (\*CookieStore) [New](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L85)
 
 ```go
 func (s *CookieStore) New(r *http.Request, name string) (*Session, error)
@@ -333,7 +346,7 @@ The difference between New() and Get() is that calling New() twice will
 decode the session data twice, while Get() registers and reuses the same
 decoded session after the first call.
 
-### <a name="CookieStore.Save">func</a> (\*CookieStore) [Save](/store.go#L102)
+### <a name="CookieStore.Save">func</a> (\*CookieStore) [Save](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L102)
 
 ```go
 func (s *CookieStore) Save(r *http.Request, w http.ResponseWriter,
@@ -342,7 +355,7 @@ func (s *CookieStore) Save(r *http.Request, w http.ResponseWriter,
 
 Save adds a single session to the response.
 
-## <a name="FilesystemStore">type</a> [FilesystemStore](/store.go#L159)
+## <a name="FilesystemStore">type</a> [FilesystemStore](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L159)
 
 ```go
 type FilesystemStore struct {
@@ -358,7 +371,7 @@ It also serves as a reference for custom stores.
 
 This store is still experimental and not well tested. Feedback is welcome.
 
-### <a name="NewFilesystemStore">func</a> [NewFilesystemStore](/store.go#L137)
+### <a name="NewFilesystemStore">func</a> [NewFilesystemStore](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L137)
 
 ```go
 func NewFilesystemStore(path string, keyPairs ...[]byte) *FilesystemStore
@@ -371,7 +384,7 @@ it will use os.TempDir().
 
 See NewCookieStore() for a description of the other parameters.
 
-### <a name="FilesystemStore.Get">func</a> (\*FilesystemStore) [Get](/store.go#L179)
+### <a name="FilesystemStore.Get">func</a> (\*FilesystemStore) [Get](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L179)
 
 ```go
 func (s *FilesystemStore) Get(r *http.Request, name string) (*Session, error)
@@ -381,7 +394,7 @@ Get returns a session for the given name after adding it to the registry.
 
 See CookieStore.Get().
 
-### <a name="FilesystemStore.MaxAge">func</a> (\*FilesystemStore) [MaxAge](/store.go#L243)
+### <a name="FilesystemStore.MaxAge">func</a> (\*FilesystemStore) [MaxAge](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L243)
 
 ```go
 func (s *FilesystemStore) MaxAge(age int)
@@ -391,7 +404,7 @@ MaxAge sets the maximum age for the store and the underlying cookie
 implementation. Individual sessions can be deleted by setting Options.MaxAge
 = -1 for that session.
 
-### <a name="FilesystemStore.MaxLength">func</a> (\*FilesystemStore) [MaxLength](/store.go#L168)
+### <a name="FilesystemStore.MaxLength">func</a> (\*FilesystemStore) [MaxLength](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L168)
 
 ```go
 func (s *FilesystemStore) MaxLength(l int)
@@ -401,7 +414,7 @@ MaxLength restricts the maximum length of new sessions to l.
 If l is 0 there is no limit to the size of a session, use with caution.
 The default for a new FilesystemStore is 4096.
 
-### <a name="FilesystemStore.New">func</a> (\*FilesystemStore) [New](/store.go#L186)
+### <a name="FilesystemStore.New">func</a> (\*FilesystemStore) [New](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L186)
 
 ```go
 func (s *FilesystemStore) New(r *http.Request, name string) (*Session, error)
@@ -411,7 +424,7 @@ New returns a session for the given name without adding it to the registry.
 
 See CookieStore.New().
 
-### <a name="FilesystemStore.Save">func</a> (\*FilesystemStore) [Save](/store.go#L210)
+### <a name="FilesystemStore.Save">func</a> (\*FilesystemStore) [Save](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L210)
 
 ```go
 func (s *FilesystemStore) Save(r *http.Request, w http.ResponseWriter,
@@ -425,7 +438,7 @@ deleted from the store path. With this process it enforces the properly
 session cookie handling so no need to trust in the cookie management in the
 web browser.
 
-## <a name="MultiError">type</a> [MultiError](/sessions.go#L197)
+## <a name="MultiError">type</a> [MultiError](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L197)
 
 ```go
 type MultiError []error
@@ -435,13 +448,13 @@ MultiError stores multiple errors.
 
 Borrowed from the App Engine SDK.
 
-### <a name="MultiError.Error">func</a> (MultiError) [Error](/sessions.go#L199)
+### <a name="MultiError.Error">func</a> (MultiError) [Error](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L199)
 
 ```go
 func (m MultiError) Error() string
 ```
 
-## <a name="Options">type</a> [Options](/options_go111.go#L10)
+## <a name="Options">type</a> [Options](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/options_go111.go#L10)
 
 ```go
 type Options struct {
@@ -463,7 +476,7 @@ Options stores configuration for a session or session store.
 
 Fields are a subset of http.Cookie fields.
 
-## <a name="Registry">type</a> [Registry](/sessions.go#L124)
+## <a name="Registry">type</a> [Registry](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L124)
 
 ```go
 type Registry struct {
@@ -473,7 +486,7 @@ type Registry struct {
 
 Registry stores sessions used during a request.
 
-### <a name="GetRegistry">func</a> [GetRegistry](/sessions.go#L109)
+### <a name="GetRegistry">func</a> [GetRegistry](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L109)
 
 ```go
 func GetRegistry(r *http.Request) *Registry
@@ -481,7 +494,7 @@ func GetRegistry(r *http.Request) *Registry
 
 GetRegistry returns a registry instance for the current request.
 
-### <a name="Registry.Get">func</a> (\*Registry) [Get](/sessions.go#L132)
+### <a name="Registry.Get">func</a> (\*Registry) [Get](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L132)
 
 ```go
 func (s *Registry) Get(store Store, name string) (session *Session, err error)
@@ -491,7 +504,7 @@ Get registers and returns a session for the given name and session store.
 
 It returns a new session if there are no sessions registered for the name.
 
-### <a name="Registry.Save">func</a> (\*Registry) [Save](/sessions.go#L148)
+### <a name="Registry.Save">func</a> (\*Registry) [Save](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L148)
 
 ```go
 func (s *Registry) Save(w http.ResponseWriter) error
@@ -499,7 +512,7 @@ func (s *Registry) Save(w http.ResponseWriter) error
 
 Save saves all sessions registered for the current request.
 
-## <a name="Session">type</a> [Session](/sessions.go#L31)
+## <a name="Session">type</a> [Session](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L31)
 
 ```go
 type Session struct {
@@ -516,7 +529,7 @@ type Session struct {
 
 Session stores the values and optional configuration for a session.
 
-### <a name="NewSession">func</a> [NewSession](/sessions.go#L21)
+### <a name="NewSession">func</a> [NewSession](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L21)
 
 ```go
 func NewSession(store Store, name string) *Session
@@ -524,7 +537,7 @@ func NewSession(store Store, name string) *Session
 
 NewSession is called by session stores to create a new session instance.
 
-### <a name="Session.AddFlash">func</a> (\*Session) [AddFlash](/sessions.go#L65)
+### <a name="Session.AddFlash">func</a> (\*Session) [AddFlash](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L65)
 
 ```go
 func (s *Session) AddFlash(value interface{}, vars ...string)
@@ -535,7 +548,7 @@ AddFlash adds a flash message to the session.
 A single variadic argument is accepted, and it is optional: it defines
 the flash key. If not defined "_flash" is used by default.
 
-### <a name="Session.Flashes">func</a> (\*Session) [Flashes](/sessions.go#L47)
+### <a name="Session.Flashes">func</a> (\*Session) [Flashes](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L47)
 
 ```go
 func (s *Session) Flashes(vars ...string) []interface{}
@@ -546,7 +559,7 @@ Flashes returns a slice of flash messages from the session.
 A single variadic argument is accepted, and it is optional: it defines
 the flash key. If not defined "_flash" is used by default.
 
-### <a name="Session.Name">func</a> (\*Session) [Name](/sessions.go#L85)
+### <a name="Session.Name">func</a> (\*Session) [Name](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L85)
 
 ```go
 func (s *Session) Name() string
@@ -554,7 +567,7 @@ func (s *Session) Name() string
 
 Name returns the name used to register the session.
 
-### <a name="Session.Save">func</a> (\*Session) [Save](/sessions.go#L80)
+### <a name="Session.Save">func</a> (\*Session) [Save](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L80)
 
 ```go
 func (s *Session) Save(r *http.Request, w http.ResponseWriter) error
@@ -564,7 +577,7 @@ Save is a convenience method to save this session. It is the same as calling
 store.Save(request, response, session). You should call Save before writing to
 the response or returning from the handler.
 
-### <a name="Session.Store">func</a> (\*Session) [Store](/sessions.go#L90)
+### <a name="Session.Store">func</a> (\*Session) [Store](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/sessions.go#L90)
 
 ```go
 func (s *Session) Store() Store
@@ -572,7 +585,7 @@ func (s *Session) Store() Store
 
 Store returns the session store used to register the session.
 
-## <a name="Store">type</a> [Store](/store.go#L22)
+## <a name="Store">type</a> [Store](https://github.com/chriswgerber/godoc2md/blob/master/github.com/gorilla/sessions/store.go#L22)
 
 ```go
 type Store interface {
@@ -595,4 +608,5 @@ Store is an interface for custom session stores.
 See CookieStore and FilesystemStore for examples.
 
 - - -
-Generated by [godoc2md](http://github.com/thatgerber/godoc2md)
+Created: 9-Aug-2023 20:02:57 +0000
+Generated by [godoc2md](http://github.com/chriswgerber/godoc2md)

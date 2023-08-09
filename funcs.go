@@ -50,7 +50,7 @@ func NewTemplateUtils(cfg *Cli) TemplateUtils {
 // template.
 func (t TemplateUtils) Methods() map[string]interface{} {
 	return map[string]interface{}{
-		"comment_md":   t.CommendToMD,
+		"comment_md":   t.CommentToMD,
 		"srcfile_url":  t.GetSourceFileURL,
 		"base":         t.StripBasePrefix,
 		"md":           t.MDEscapeInline,
@@ -64,8 +64,8 @@ func (t TemplateUtils) Methods() map[string]interface{} {
 	}
 }
 
-// CommendToMD converts the provided text, from Go source comment, into markdown.
-func (t TemplateUtils) CommendToMD(comment string) string {
+// CommentToMD converts the provided text, from Go source comment, into markdown.
+func (t TemplateUtils) CommentToMD(comment string) string {
 	var buf bytes.Buffer
 	ToMD(&buf, comment)
 	return buf.String()

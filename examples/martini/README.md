@@ -29,7 +29,8 @@ func main() {
 
 ## <a name="pkg-index">Index</a>
 
-* [Constants](#pkg-constants)* [Variables](#pkg-variables)
+* [Constants](#pkg-constants)
+* [Variables](#pkg-variables)
 * [type BeforeFunc](#BeforeFunc)
 * [type ClassicMartini](#ClassicMartini)
   * [func Classic() *ClassicMartini](#Classic)
@@ -61,7 +62,7 @@ func main() {
 
 #### <a name="pkg-files">Package files</a>
 
-[env.go](/github.com/codegangsta/martini/env.go) [logger.go](/github.com/codegangsta/martini/logger.go) [martini.go](/github.com/codegangsta/martini/martini.go) [recovery.go](/github.com/codegangsta/martini/recovery.go) [response_writer.go](/github.com/codegangsta/martini/response_writer.go) [return_handler.go](/github.com/codegangsta/martini/return_handler.go) [router.go](/github.com/codegangsta/martini/router.go) [static.go](/github.com/codegangsta/martini/static.go) 
+[env.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/env.go) [logger.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/logger.go) [martini.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go) [recovery.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/recovery.go) [response_writer.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/response_writer.go) [return_handler.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/return_handler.go) [router.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/router.go) [static.go](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/static.go) 
 
 ## <a name="pkg-constants">Constants</a>
 
@@ -87,7 +88,7 @@ Env is the environment that Martini is executing in. The MARTINI_ENV is read on 
 var Root string
 ```
 
-## <a name="BeforeFunc">type</a> [BeforeFunc](/response_writer.go#L29)
+## <a name="BeforeFunc">type</a> [BeforeFunc](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/response_writer.go#L29)
 
 ```go
 type BeforeFunc func(ResponseWriter)
@@ -95,7 +96,7 @@ type BeforeFunc func(ResponseWriter)
 
 BeforeFunc is a function that is called before the ResponseWriter has been written to.
 
-## <a name="ClassicMartini">type</a> [ClassicMartini](/martini.go#L111)
+## <a name="ClassicMartini">type</a> [ClassicMartini](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L111)
 
 ```go
 type ClassicMartini struct {
@@ -106,7 +107,7 @@ type ClassicMartini struct {
 
 ClassicMartini represents a Martini with some reasonable defaults. Embeds the router functions for convenience.
 
-### <a name="Classic">func</a> [Classic](/martini.go#L118)
+### <a name="Classic">func</a> [Classic](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L118)
 
 ```go
 func Classic() *ClassicMartini
@@ -115,7 +116,7 @@ func Classic() *ClassicMartini
 Classic creates a classic Martini with some basic default middleware - martini.Logger, martini.Recovery and martini.Static.
 Classic also maps martini.Routes as a service.
 
-## <a name="Context">type</a> [Context](/martini.go#L140)
+## <a name="Context">type</a> [Context](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L140)
 
 ```go
 type Context interface {
@@ -131,7 +132,7 @@ type Context interface {
 
 Context represents a request context. Services can be mapped on the request level from this interface.
 
-## <a name="Handler">type</a> [Handler](/martini.go#L131)
+## <a name="Handler">type</a> [Handler](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L131)
 
 ```go
 type Handler interface{}
@@ -140,7 +141,7 @@ type Handler interface{}
 Handler can be any callable function. Martini attempts to inject services into the handler's argument list.
 Martini will panic if an argument could not be fullfilled via dependency injection.
 
-### <a name="Logger">func</a> [Logger](/logger.go#L10)
+### <a name="Logger">func</a> [Logger](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/logger.go#L10)
 
 ```go
 func Logger() Handler
@@ -148,7 +149,7 @@ func Logger() Handler
 
 Logger returns a middleware handler that logs the request as it goes in and the response as it goes out.
 
-### <a name="Recovery">func</a> [Recovery](/recovery.go#L115)
+### <a name="Recovery">func</a> [Recovery](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/recovery.go#L115)
 
 ```go
 func Recovery() Handler
@@ -157,7 +158,7 @@ func Recovery() Handler
 Recovery returns a middleware that recovers from any panics and writes a 500 if there was one.
 While Martini is in development mode, Recovery will also output the panic as HTML.
 
-### <a name="Static">func</a> [Static](/static.go#L53)
+### <a name="Static">func</a> [Static](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/static.go#L53)
 
 ```go
 func Static(directory string, staticOpt ...StaticOptions) Handler
@@ -165,7 +166,7 @@ func Static(directory string, staticOpt ...StaticOptions) Handler
 
 Static returns a middleware handler that serves static files in the given directory.
 
-## <a name="Martini">type</a> [Martini](/martini.go#L30)
+## <a name="Martini">type</a> [Martini](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L30)
 
 ```go
 type Martini struct {
@@ -176,7 +177,7 @@ type Martini struct {
 
 Martini represents the top level web application. inject.Injector methods can be invoked to map services on a global level.
 
-### <a name="New">func</a> [New](/martini.go#L38)
+### <a name="New">func</a> [New](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L38)
 
 ```go
 func New() *Martini
@@ -184,7 +185,7 @@ func New() *Martini
 
 New creates a bare bones Martini instance. Use this method if you want to have full control over the middleware that is used.
 
-### <a name="Martini.Action">func</a> (\*Martini) [Action](/martini.go#L55)
+### <a name="Martini.Action">func</a> (\*Martini) [Action](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L55)
 
 ```go
 func (m *Martini) Action(handler Handler)
@@ -192,7 +193,7 @@ func (m *Martini) Action(handler Handler)
 
 Action sets the handler that will be called after all the middleware has been invoked. This is set to martini.Router in a martini.Classic().
 
-### <a name="Martini.Handlers">func</a> (\*Martini) [Handlers](/martini.go#L47)
+### <a name="Martini.Handlers">func</a> (\*Martini) [Handlers](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L47)
 
 ```go
 func (m *Martini) Handlers(handlers ...Handler)
@@ -201,7 +202,7 @@ func (m *Martini) Handlers(handlers ...Handler)
 Handlers sets the entire middleware stack with the given Handlers. This will clear any current middleware handlers.
 Will panic if any of the handlers is not a callable function
 
-### <a name="Martini.Logger">func</a> (\*Martini) [Logger](/martini.go#L61)
+### <a name="Martini.Logger">func</a> (\*Martini) [Logger](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L61)
 
 ```go
 func (m *Martini) Logger(logger *log.Logger)
@@ -209,7 +210,7 @@ func (m *Martini) Logger(logger *log.Logger)
 
 Logger sets the logger
 
-### <a name="Martini.Run">func</a> (\*Martini) [Run](/martini.go#L90)
+### <a name="Martini.Run">func</a> (\*Martini) [Run](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L90)
 
 ```go
 func (m *Martini) Run()
@@ -217,7 +218,7 @@ func (m *Martini) Run()
 
 Run the http server. Listening on os.GetEnv("PORT") or 3000 by default.
 
-### <a name="Martini.RunOnAddr">func</a> (\*Martini) [RunOnAddr](/martini.go#L79)
+### <a name="Martini.RunOnAddr">func</a> (\*Martini) [RunOnAddr](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L79)
 
 ```go
 func (m *Martini) RunOnAddr(addr string)
@@ -225,7 +226,7 @@ func (m *Martini) RunOnAddr(addr string)
 
 Run the http server on a given host and port.
 
-### <a name="Martini.ServeHTTP">func</a> (\*Martini) [ServeHTTP](/martini.go#L74)
+### <a name="Martini.ServeHTTP">func</a> (\*Martini) [ServeHTTP](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L74)
 
 ```go
 func (m *Martini) ServeHTTP(res http.ResponseWriter, req *http.Request)
@@ -233,7 +234,7 @@ func (m *Martini) ServeHTTP(res http.ResponseWriter, req *http.Request)
 
 ServeHTTP is the HTTP Entry point for a Martini instance. Useful if you want to control your own HTTP server.
 
-### <a name="Martini.Use">func</a> (\*Martini) [Use](/martini.go#L67)
+### <a name="Martini.Use">func</a> (\*Martini) [Use](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/martini.go#L67)
 
 ```go
 func (m *Martini) Use(handler Handler)
@@ -241,7 +242,7 @@ func (m *Martini) Use(handler Handler)
 
 Use adds a middleware Handler to the stack. Will panic if the handler is not a callable func. Middleware Handlers are invoked in the order that they are added.
 
-## <a name="Params">type</a> [Params](/router.go#L13)
+## <a name="Params">type</a> [Params](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/router.go#L13)
 
 ```go
 type Params map[string]string
@@ -249,7 +250,7 @@ type Params map[string]string
 
 Params is a map of name/value pairs for named routes. An instance of martini.Params is available to be injected into any route handler.
 
-## <a name="ResponseWriter">type</a> [ResponseWriter](/response_writer.go#L13)
+## <a name="ResponseWriter">type</a> [ResponseWriter](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/response_writer.go#L13)
 
 ```go
 type ResponseWriter interface {
@@ -272,7 +273,7 @@ ResponseWriter is a wrapper around http.ResponseWriter that provides extra infor
 the response. It is recommended that middleware handlers use this construct to wrap a responsewriter
 if the functionality calls for it.
 
-### <a name="NewResponseWriter">func</a> [NewResponseWriter](/response_writer.go#L32)
+### <a name="NewResponseWriter">func</a> [NewResponseWriter](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/response_writer.go#L32)
 
 ```go
 func NewResponseWriter(rw http.ResponseWriter) ResponseWriter
@@ -280,7 +281,7 @@ func NewResponseWriter(rw http.ResponseWriter) ResponseWriter
 
 NewResponseWriter creates a ResponseWriter that wraps an http.ResponseWriter
 
-## <a name="ReturnHandler">type</a> [ReturnHandler](/return_handler.go#L13)
+## <a name="ReturnHandler">type</a> [ReturnHandler](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/return_handler.go#L13)
 
 ```go
 type ReturnHandler func(Context, []reflect.Value)
@@ -291,7 +292,7 @@ when a route handler returns something. The ReturnHandler is
 responsible for writing to the ResponseWriter based on the values
 that are passed into this function.
 
-## <a name="Route">type</a> [Route](/router.go#L189)
+## <a name="Route">type</a> [Route](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/router.go#L189)
 
 ```go
 type Route interface {
@@ -310,7 +311,7 @@ type Route interface {
 
 Route is an interface representing a Route in Martini's routing layer.
 
-## <a name="RouteMatch">type</a> [RouteMatch](/router.go#L228)
+## <a name="RouteMatch">type</a> [RouteMatch](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/router.go#L228)
 
 ```go
 type RouteMatch int
@@ -325,7 +326,7 @@ const (
 )
 ```
 
-### <a name="RouteMatch.BetterThan">func</a> (RouteMatch) [BetterThan](/router.go#L238)
+### <a name="RouteMatch.BetterThan">func</a> (RouteMatch) [BetterThan](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/router.go#L238)
 
 ```go
 func (r RouteMatch) BetterThan(o RouteMatch) bool
@@ -333,7 +334,7 @@ func (r RouteMatch) BetterThan(o RouteMatch) bool
 
 Higher number = better match
 
-## <a name="Router">type</a> [Router](/router.go#L16)
+## <a name="Router">type</a> [Router](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/router.go#L16)
 
 ```go
 type Router interface {
@@ -370,7 +371,7 @@ type Router interface {
 
 Router is Martini's de-facto routing interface. Supports HTTP verbs, stacked handlers, and dependency injection.
 
-### <a name="NewRouter">func</a> [NewRouter](/router.go#L68)
+### <a name="NewRouter">func</a> [NewRouter](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/router.go#L68)
 
 ```go
 func NewRouter() Router
@@ -388,7 +389,7 @@ m.MapTo(r, (*martini.Routes)(nil))
 
 If you are using ClassicMartini, then this is done for you.
 
-## <a name="Routes">type</a> [Routes](/router.go#L328)
+## <a name="Routes">type</a> [Routes](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/router.go#L328)
 
 ```go
 type Routes interface {
@@ -403,7 +404,7 @@ type Routes interface {
 
 Routes is a helper service for Martini's routing layer.
 
-## <a name="StaticOptions">type</a> [StaticOptions](/static.go#L13)
+## <a name="StaticOptions">type</a> [StaticOptions](https://github.com/chriswgerber/godoc2md/blob/master/github.com/codegangsta/martini/static.go#L13)
 
 ```go
 type StaticOptions struct {
@@ -427,4 +428,5 @@ type StaticOptions struct {
 StaticOptions is a struct for specifying configuration options for the martini.Static middleware.
 
 - - -
-Generated by [godoc2md](http://github.com/thatgerber/godoc2md)
+Created: 9-Aug-2023 20:02:57 +0000
+Generated by [godoc2md](http://github.com/chriswgerber/godoc2md)

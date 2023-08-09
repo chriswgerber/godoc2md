@@ -3,8 +3,8 @@ package godoc2md
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"path"
 	"strings"
 	"text/template"
@@ -61,7 +61,7 @@ func NewPresentation(corpus *godoc.Corpus, config *Cli) *godoc.Presentation {
 	templateText := pkgTemplate
 	if *config.AltPkgTemplate != "" {
 		templateName = *config.AltPkgTemplate
-		buf, err := ioutil.ReadFile(templateName)
+		buf, err := os.ReadFile(templateName)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -77,7 +77,7 @@ func NewPresentation(corpus *godoc.Corpus, config *Cli) *godoc.Presentation {
 	pres.PackageText, err = docTemplate.Parse(templateText)
 
 	if err != nil {
-		log.Fatal("error parsing template: %v", err)
+		log.Fatalf("error parsing template: %v", err)
 	}
 
 	return pres
